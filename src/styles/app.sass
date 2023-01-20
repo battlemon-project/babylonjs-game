@@ -1,0 +1,152 @@
+@font-face
+  font-family: 'Play'
+  src: url('../assets/fonts/Play-Regular.ttf')
+
+ion-content
+  font-family: Play !important
+
+body
+  font-family: Play !important
+  font-weight: bold
+  letter-spacing: .2rem
+  text-decoration: none
+  text-transform: uppercase
+
+.margin_bottom
+  margin-bottom: 2%
+
+.background_none
+  backdrop-filter: none !important
+  background: none !important
+
+.button
+  margin: 0
+  overflow: visible
+  font: inherit
+  -webkit-appearance: none
+  border-radius: 5px
+  display: inline-block
+  box-sizing: border-box
+  padding: 0 30px
+  vertical-align: middle
+  font-size: 2.5vw
+  line-height: 6vw
+  text-align: center
+  transition: .1s ease-in-out
+  transition-property: color,background-color,border-color
+  color: #fff
+  border: 1px solid transparent
+  white-space: nowrap
+  background-color: rgba(255, 255, 255, 0.2)
+  backdrop-filter: blur(10px)
+  text-decoration: none
+
+
+#home
+  top: 50%
+  left: 0
+  width: 100%
+  text-align: center
+  position: absolute
+  margin-top: -3vw
+
+  .button
+    width: 40%
+
+#levels
+  height: 100%
+  width: 100%
+  .grid_level
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 100%
+
+    .item
+      background-color: rgba(255, 255, 255, 0.2)
+      backdrop-filter: blur(10px)
+      margin: 2%
+      border-radius: 5px
+      font-size: 2.5vw
+      font-weight: bold
+      display: table-cell
+      vertical-align: middle
+      text-align: center
+      text-decoration: none
+      color: #fff
+
+      &.close
+        padding: 10px
+        box-sizing: border-box
+        img
+          width: 100%
+          height: 100%
+
+.modal
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 10
+  width: 100%
+  height: 100%
+  background-color: rgba(255, 255, 255, 0.2)
+  backdrop-filter: blur(10px)
+  display: flex
+  justify-content: center
+  a
+    color: #ffffff
+    text-decoration: none
+    width: 100%
+    height: 100%
+    display: flex
+    justify-content: left
+    align-items: center
+  .container
+    width: 50%
+    height: 100%
+    background: black
+    padding: 4%
+    box-sizing: border-box
+    .title
+      font-size: 2.5vw
+      color: #ffffff
+      width: 100%
+
+  .content
+    position: relative
+    height: 100%
+    width: 100%
+    .list
+      width: 100%
+
+    .button_bar
+      position: absolute
+      bottom: 0
+      width: 100%
+      .button
+        width: 100%
+        text-align: center
+        justify-content: center
+
+#menu_button
+  height: 100%
+  flex: 1
+  text-align: left
+
+  .menu_button
+    background: url('../assets/images/menu.png') no-repeat
+    background-size: contain
+    width: 50%
+    height: 70%
+
+#top_bar
+    margin-top: 2%
+    height: 10%
+    width: 100%
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 2
+    display: flex
+    padding: 0 2%
+    box-sizing: border-box

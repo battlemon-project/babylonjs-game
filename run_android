@@ -1,0 +1,2 @@
+#!/bin/bash
+ionic capacitor run android -l --external
