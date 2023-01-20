@@ -34,7 +34,7 @@ export default class Game {
       const serverClient = new ServerClient()
       serverClient.init(async (playerId: string) => {
         store.commit('ADD_SELF_PLAYER', playerId)
-        await store.commit('ADD_PLAYER', { playerId, character: 'Girl.glb' })
+        await store.commit('ADD_PLAYER', { playerId, character: 'player.glb' })
         
         const playerSelf = new PlayerSelf(playerId)
         

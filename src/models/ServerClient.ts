@@ -58,7 +58,7 @@ export default class ServerClient {
   }
   
   private createPlayer (playerId: string) {
-    store.commit('ADD_PLAYER', { playerId: playerId, character: 'Girl.glb' })
+    store.commit('ADD_PLAYER', { playerId: playerId, character: 'player.glb' })
     this.players.push(new Player(playerId))
   }
   
