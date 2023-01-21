@@ -22,7 +22,7 @@ export default class Scene {
         globalThis.scene = this.scene
         this.store = store
         this.engine = engine
-        this.resourcesPath = process.env.VUE_APP_CDN_DOMAIN + 'resources/graphics/levels/level_' + this.store.state.level.levelId + '/'
+        this.resourcesPath = process.env.VUE_APP_CDN_DOMAIN + '/resources/graphics/levels/level_' + this.store.state.level.levelId + '/'
         this.filePath = 'map.babylon' + '?time=' + Date.now()
     }
 
