@@ -17,7 +17,7 @@ export default class ServerClient {
   }
   
   init (callback: any) {
-    const client = new Colyseus.Client('https://' + process.env.VUE_APP_SERVER_DOMAIN + ':2567')
+    const client = new Colyseus.Client(process.env.VUE_APP_SERVER_DOMAIN)
     this.playerId = ServerClient.getFakeId()
     
     client.joinOrCreate('my_room').then(room => {

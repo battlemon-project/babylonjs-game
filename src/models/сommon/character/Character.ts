@@ -31,7 +31,7 @@ export default class Character {
 
     SceneLoader.ImportMesh(
       '',
-        process.env.VUE_APP_CDN_DOMAIN + '/resources/graphics/characters/',
+      '/resources/graphics/characters/',
       character + '?time=' + Date.now(),
       this.scene,
       (newMeshes) => {
