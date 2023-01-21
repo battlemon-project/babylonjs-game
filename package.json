@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build-admin": "vue-cli-service build --dest ../babylonjs-game-admin/public/game",
+    "build-admin": "vue-cli-service build --dest ../babylonjs-game-dist/game",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",

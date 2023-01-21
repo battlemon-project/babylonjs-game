@@ -19,7 +19,8 @@ export default class Environment {
   }
 
   setupHDR () {
-    const hdrTexture = CubeTexture.CreateFromPrefilteredData('/resources/graphics/textures/environment.env', this.scene)
+    const url = process.env.VUE_APP_CDN_DOMAIN + '/resources/graphics/textures/environment.env'
+    const hdrTexture = CubeTexture.CreateFromPrefilteredData(url, this.scene)
     const hdrRotation = 0
     hdrTexture.setReflectionTextureMatrix(
       Matrix.RotationY(
