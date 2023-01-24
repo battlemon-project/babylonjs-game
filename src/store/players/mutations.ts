@@ -15,7 +15,8 @@ const playerExample: Player = {
       back: false,
       left: false,
       right: false,
-      isMoving: false
+      isMoving: false,
+      sprint: false
     },
     rotate: { x: 0, y: 0 },
     jump: false,

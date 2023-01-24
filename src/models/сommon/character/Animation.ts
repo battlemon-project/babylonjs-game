@@ -62,10 +62,6 @@ export default class Animation {
     const animationJumpMiddle = this.getAnimationByName('JumpMiddle_' + this.playerId)
     const animationJumpFinish = this.getAnimationByName('JumpFinish_' + this.playerId)
   
-    this.subscribeStore.batteryCharge(() => {
-      this.blending(this.getAnimationByState())
-    })
-  
     this.subscribeStore.move((move: Move) => {
       if (!move.isFly && !move.jump) {
         this.blending(this.getAnimationByState())
@@ -106,7 +102,7 @@ export default class Animation {
   
     if (move.forward.isMoving) {
       animation = animationRun
-      if (this.store.state.level.batteryCharge > 0) {
+      if (move.forward.sprint) {
         animation = animationSprint
       }
     }

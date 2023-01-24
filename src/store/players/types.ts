@@ -4,6 +4,7 @@ export interface Forward {
   front: boolean;
   back: boolean;
   isMoving: boolean;
+  sprint: boolean;
 }
 
 export interface Move {

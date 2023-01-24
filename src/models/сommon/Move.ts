@@ -59,14 +59,12 @@ export default class Move {
       right: false,
       front: false,
       back: false,
-      isMoving: false
+      isMoving: false,
+      sprint: false
     }
     
     this.speed = DEFAULT_SPEED
     this.createJumpAnimation()
-    this.changeSpeed()
-    
-    
     
     this.observerBefore = this.scene.onBeforeRenderObservable.add(() => {
       this.beforeRender()
@@ -96,6 +94,8 @@ export default class Move {
     if (!this.forward.isMoving) {
       return null
     }
+
+    this.changeSpeed()
     
     const nextStep = Vector3.Zero()
     const average = this.rollingAverage.average
@@ -190,13 +190,7 @@ export default class Move {
   }
   
   private changeSpeed () {
-    setInterval(() => {
-      if (store.getters.batteryCharge > 0) {
-        this.speed = SPRINT_SPEED
-      } else {
-        this.speed = DEFAULT_SPEED
-      }
-    }, 200)
+    this.speed = this.forward.sprint ? SPRINT_SPEED : DEFAULT_SPEED
   }
   
   private beforeRender () {

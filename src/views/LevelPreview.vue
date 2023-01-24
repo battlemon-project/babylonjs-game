@@ -2,9 +2,7 @@
   <div id="level_preview" v-show="!this.$store.state.level.loading && this.show">
     <div class="container">
       <div class="text">
-        В этом уровне нужно найти три ключа для выхода из лабиринта.
-        <br>
-        Используйте кнопки для открытия люков.
+        Are you ready?
       </div>
       <div class="container_button">
         <button @click="play" class="button">play</button>
@@ -21,7 +19,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: black;
+    background: -webkit-gradient(linear,left top,left bottom,from(#035161),to(#010024));
+    background: -webkit-linear-gradient(top,#035161 0,#010024 100%);
+    background: -o-linear-gradient(top,#035161 0,#010024 100%);
+    background: linear-gradient(180deg,#035161 0,#010024 100%);
     color: white;
     text-align: center;
   }

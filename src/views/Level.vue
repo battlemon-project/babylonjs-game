@@ -3,9 +3,9 @@
         <div id="level">
             <canvas id="canvas"></canvas>
 <!--            <controller v-if="!this.$store.state.level.loading" />-->
-            <topbar/>
+            <TopBar/>
+            <BottomBar/>
             <MapLevel/>
-            <Battery/>
             <MenuLevel/>
             <Settings/>
 
@@ -36,7 +36,10 @@
     }
 
     #loading_overlay {
-        background: black;
+        background: -webkit-gradient(linear,left top,left bottom,from(#035161),to(#010024));
+        background: -webkit-linear-gradient(top,#035161 0,#010024 100%);
+        background: -o-linear-gradient(top,#035161 0,#010024 100%);
+        background: linear-gradient(180deg,#035161 0,#010024 100%);
         width: 100%;
         height: 100%;
         position: absolute;
@@ -60,10 +63,9 @@
 <script lang="ts">
   import { defineComponent } from 'vue'
   import Game from '../models/Game'
-  // import Controller from '@/views/gui/Controller.vue'
-  import Topbar from '@/views/gui/topbar/Topbar.vue'
+  import TopBar from '@/views/gui/topbar/TopBar.vue'
+  import BottomBar from '@/views/gui/topbar/BottomBar.vue'
   import MapLevel from '@/views/gui/MapLevel.vue'
-  import Battery from '@/views/gui/Battery.vue'
   import LevelPreview from '@/views/LevelPreview.vue'
   import MenuLevel from '@/views/gui/MenuLevel.vue'
   import Settings from '@/views/gui/Settings.vue'
@@ -74,7 +76,7 @@
     name: 'Level',
     mounted (): void {
       this.$nextTick(() => {
-        this.$store.commit('SET_LEVEL', this.$route.params.id)
+        this.$store.commit('SET_LEVEL', 1)
         const game = new Game()
         game.init()
       })
@@ -92,11 +94,10 @@
       }
     },
     components: {
-      // Controller,
-      Topbar,
+      TopBar,
+      BottomBar,
       MapLevel,
       IonPage,
-      Battery,
       LevelPreview,
       MenuLevel,
       Settings

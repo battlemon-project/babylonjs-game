@@ -5,8 +5,6 @@ import Camera from './playerSelf/Camera'
 import PlayerSelf from './playerSelf/Player'
 import LightPoints from './scene/LightPoints'
 import Doors from '@/models/mehanics/Doors'
-import ChargingStations from '@/models/mehanics/ChargingStations'
-import Keys from '@/models/mehanics/Keys'
 import LowerFloor from '@/models/mehanics/LowerFloor'
 import Audio from '@/models/sounds/Audio'
 import Teleport from '@/models/mehanics/Teleport'
@@ -42,9 +40,7 @@ export default class Game {
         new Teleport(playerId)
         new LightPoints()
         new Doors()
-        new ChargingStations()
         new LowerFloor()
-        new Keys()
         
         playerSelf.loadCharacter( () => {
           store.commit('LOADING_TOGGLE')

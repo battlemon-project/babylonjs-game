@@ -123,16 +123,7 @@ import { defineComponent } from 'vue'
 import Teleport from '@/models/mehanics/Teleport'
 import { Vector3 } from '@babylonjs/core'
 
-//import { AdMobPlus, RewardedAd } from '@admob-plus/capacitor'
-
 export default defineComponent({
-  mounted (): void {
-    //https://www.npmjs.com/package/@admob-plus/capacitor
-    //TODO: повесеть евент чтобы возвращать кнопку
-    /*      AdMobPlus.addListener('rewarded.reward', () => {
-            this.mapRewardedAdOpened = true
-          })*/
-  },
   computed: {
     urlMap () {
       return '/resources/graphics/levels/level_' + this.$store.state.level.levelId + '/map.png'
@@ -154,13 +145,6 @@ export default defineComponent({
   methods: {
     openRewardedAd: async function () {
       this.mapRewardedAdLoad = true
-
-      /*const rewarded = new RewardedAd({
-        adUnitId: 'ca-app-pub-3940256099942544/5224354917',
-      })
-
-      await rewarded.load()
-      await rewarded.show()*/
     },
     close () {
       this.$store.commit('MAP_TOGGLE')

@@ -9,16 +9,6 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import('@/views/Home.vue')
-  },
-  {
-    path: '/levels',
-    name: 'Levels',
-    component: () => import('@/views/Levels.vue')
-  },
-  {
-    path: '/levels/:id',
-    name: 'Level',
     component: () => import('@/views/Level.vue')
   },
   {

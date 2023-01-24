@@ -53,6 +53,10 @@ export default class Controller {
       if (eventCode === 'Space') {
         jump = true
       }
+
+      if (eventCode === 'ShiftLeft') {
+        this.move.forward.sprint = true
+      }
     }
     
     if (KeyboardEventTypes.KEYUP === eventType) {
@@ -74,6 +78,10 @@ export default class Controller {
       
       if (eventCode === 'Space') {
         this.store.commit('JUMP_DISABLED', this.playerId)
+      }
+
+      if (eventCode === 'ShiftLeft') {
+        this.move.forward.sprint = false
       }
     }
     

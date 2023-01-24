@@ -8,7 +8,7 @@
     #map_button {
         height: 100%;
         flex: 1;
-        text-align: right;
+        text-align: left;
     }
 </style>
 
