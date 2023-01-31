@@ -40,5 +40,6 @@ export interface LevelState {
   lowerFloorPosition: lowerFloorPosition,
   lowerFloorSize: lowerFloorSize,
   batteryCharge: number,
-  finish: boolean
+  finish: boolean,
+  hubStatus: string
 }

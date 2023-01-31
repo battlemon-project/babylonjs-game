@@ -18,7 +18,8 @@ const state: LevelState = {
   keys: [],
   keysActiveCount: 0,
   batteryCharge: 0,
-  finish: false
+  finish: false,
+  hubStatus: 'none'
 }
 
 const getters = {

@@ -66,5 +66,8 @@ export const mutations: MutationTree<LevelState> = {
   SET_FINISH (state) {
     LevelStorage.saveCompletedLevel(state.levelId)
     state.finish = true
-  }
+  },
+  SET_HUB_STATUS (state, payload) {
+    state.hubStatus = payload
+  },
 }
