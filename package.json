@@ -33,6 +33,7 @@
     "cordova-plugin-screen-orientation": "^3.0.2",
     "core-js": "^3.6.5",
     "dotenv": "^16.0.3",
+    "ethos-connect-vue-es": "^0.0.19",
     "nipplejs": "^0.9.0",
     "node-sass": "^7.0.1",
     "rxjs": "^6.6.7",

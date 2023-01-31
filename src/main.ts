@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import { EthosConnectPlugin, type EthosConfiguration } from "ethos-connect-vue-es";
 
 import { IonicVue } from '@ionic/vue';
 
@@ -17,11 +18,15 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation'
 //AndroidFullScreen.leanMode()
 //AndroidFullScreen.immersiveMode()
 ScreenOrientation.lock(ScreenOrientation.ORIENTATIONS.LANDSCAPE)
+const config: EthosConfiguration = {
+  apiKey: "vue-example-app",
+};
 
 const app = createApp(App)
   .use(store)
   .use(IonicVue)
   .use(router)
+  .use(EthosConnectPlugin, config)
 
 router.isReady().then(() => {
   app.mount('#app');

@@ -33,7 +33,7 @@ export default class Move {
   fly: boolean
   flyUp: boolean
   playerId: string
-  flyModeTimerId: number
+  flyModeTimerId: number | any
   observerBefore?: Nullable<Observer<Scene>>
   observerAfter?: Nullable<Observer<Scene>>
   rollingAverage: RollingAverage

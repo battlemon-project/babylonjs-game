@@ -1,9 +1,12 @@
 <template>
-  <ion-page>
-    <ion-content :fullscreen="true" scroll-y="false">
-      <canvas id="canvas"></canvas>
-    </ion-content>
-  </ion-page>
+  <EthosConnectProvider>
+    <ion-page>
+      <ion-content :fullscreen="true" scroll-y="false">
+        <AddressWidget />
+        <canvas id="canvas"></canvas>
+      </ion-content>
+    </ion-page>
+  </EthosConnectProvider>
 </template>
 
 <style>
@@ -32,6 +35,7 @@
 <script lang="ts">
   import { defineComponent } from 'vue'
   import Hub from '../models/Hub'
+
   
   export default defineComponent({
     name: 'Hub',
