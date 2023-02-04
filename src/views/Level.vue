@@ -76,7 +76,10 @@
     name: 'Level',
     mounted (): void {
       this.$nextTick(() => {
-        this.$store.commit('SET_LEVEL', 1)
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const level = urlParams.get('level')
+        this.$store.commit('SET_LEVEL', level ? level : 1)
         const game = new Game()
         game.init()
       })
