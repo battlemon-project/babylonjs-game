@@ -8,7 +8,6 @@ import Doors from '@/models/mehanics/Doors'
 import LowerFloor from '@/models/mehanics/LowerFloor'
 import Audio from '@/models/sounds/Audio'
 import Teleport from '@/models/mehanics/Teleport'
-import Sky from '@/models/mehanics/Sky'
 import ServerClient from './ServerClient'
 import Environment from '@/models/scene/Environment'
 
@@ -24,7 +23,6 @@ export default class Game {
 
     sceneModel.load(() => {
       new Audio()
-      new Sky()
       environment.setupHDR()
       environment.setupGlow()
       environment.setupLightAndShadow()
