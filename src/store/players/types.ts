@@ -19,10 +19,16 @@ export interface Move {
   };
 }
 
+export interface Item {
+  placeholder: string;
+  name: string;
+}
+
 export interface Player {
   id: string;
   move: Move;
   character: string;
+  items: Item[];
 }
 
 export interface Players {

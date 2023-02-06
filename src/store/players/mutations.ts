@@ -9,6 +9,7 @@ const getPlayerById = (state: Players, playerId: string) => {
 const playerExample: Player = {
   id: 'new',
   character: '',
+  items: [],
   move: {
     forward: {
       front: false,
@@ -35,6 +36,7 @@ export const mutations: MutationTree<Players> = {
       const newPlayer = JSON.parse(JSON.stringify(playerExample))
       newPlayer.id = payload.playerId
       newPlayer.character = payload.character
+      newPlayer.items = payload.items
   
       state.list.push(newPlayer)
     }

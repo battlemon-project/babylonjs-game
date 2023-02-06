@@ -30,7 +30,13 @@ export default class Game {
       const serverClient = new ServerClient()
       serverClient.init(async (playerId: string) => {
         store.commit('ADD_SELF_PLAYER', playerId)
-        await store.commit('ADD_PLAYER', { playerId, character: 'player.glb' })
+        const playerData = {
+          playerId,
+          character: 'player.glb',
+          items: [{ placeholder: 'face', name: 'Mask_Cowboy_Scarf.gltf' }]
+        }
+        
+        await store.commit('ADD_PLAYER', playerData)
         
         const playerSelf = new PlayerSelf(playerId)
         

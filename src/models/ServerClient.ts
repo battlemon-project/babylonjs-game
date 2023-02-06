@@ -58,7 +58,13 @@ export default class ServerClient {
   }
   
   private createPlayer (playerId: string) {
-    store.commit('ADD_PLAYER', { playerId: playerId, character: 'player.glb' })
+    const playerData = {
+      playerId,
+      character: 'player.glb',
+      items: [{ placeholder: 'face', name: 'Mask_Cowboy_Scarf.gltf' }]
+    }
+    
+    store.commit('ADD_PLAYER', playerData)
     this.players.push(new Player(playerId))
   }
   

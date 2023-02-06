@@ -7,6 +7,7 @@ import {
 import Animation from './Animation'
 import Rotation from './Rotation'
 import store from '@/store/index'
+import Items from "@/models/сommon/character/Items";
 
 export default class Character {
   scene: Scene
@@ -28,7 +29,7 @@ export default class Character {
 
   load (callback: any = null) {
     const character = store.getters.getPlayerById(this.playerId).character
-
+    
     SceneLoader.ImportMesh(
       '',
       '/resources/graphics/characters/',
@@ -38,7 +39,7 @@ export default class Character {
         newMeshes.forEach(mesh => {
           mesh.isPickable = false
         })
-  
+        
         this.mesh = newMeshes.find(mesh => mesh.id === 'Body')
         this.rootMesh = newMeshes.find(mesh => mesh.id === '__root__')
         
@@ -56,6 +57,9 @@ export default class Character {
         
         this.setAnimations()
         this.setShadow(this.mesh)
+
+        new Items(this.playerId, newMeshes)
+        
   
         this.observer = this.scene.onBeforeRenderObservable.add(() => {
           this.beforeRender()
