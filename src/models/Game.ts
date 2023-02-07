@@ -32,8 +32,11 @@ export default class Game {
         store.commit('ADD_SELF_PLAYER', playerId)
         const playerData = {
           playerId,
-          character: 'player.glb',
-          items: [{ placeholder: 'face', name: 'Mask_Cowboy_Scarf.gltf' }]
+          character: 'player.gltf',
+          items: [
+            { placeholder: 'mask', name: 'Mask_Cowboy_Scarf.gltf' },
+            { placeholder: 'weapon_r', name: 'FireArms_Revolver.gltf' }
+          ]
         }
         
         await store.commit('ADD_PLAYER', playerData)

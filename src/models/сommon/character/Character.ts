@@ -71,7 +71,7 @@ export default class Character {
       },
       undefined,
       undefined,
-      '.glb'
+      '.gltf'
     )
   }
   

@@ -60,8 +60,8 @@ export default class ServerClient {
   private createPlayer (playerId: string) {
     const playerData = {
       playerId,
-      character: 'player.glb',
-      items: [{ placeholder: 'face', name: 'Mask_Cowboy_Scarf.gltf' }]
+      character: 'player.gltf',
+      items: [{ placeholder: 'mask', name: 'Mask_Cowboy_Scarf.gltf' }]
     }
     
     store.commit('ADD_PLAYER', playerData)
