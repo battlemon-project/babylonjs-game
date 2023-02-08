@@ -31,9 +31,14 @@ export default class LightPoints {
         this.scene.removeLight(light)
       }
     })
+    
+    if (!this.sceneLights.length) {
+      console.info('Not set light points for class LightPoints')
+      return null
+    }
 
     let i = 0
-    while (this.maxLights > i) {
+    while (this.maxLights > i && this.sceneLights.length >= i) {
       const light = new PointLight('pointLight' + i, new Vector3(0, 0, 0), this.scene)
       light.intensity = 0
 
@@ -107,6 +112,11 @@ export default class LightPoints {
       return
     }
     
+    if (!this.sceneLights.length) {
+      console.error('Not set light points')
+      return
+    }
+    
     const meshFoot = this.meshFoot
     const meshFootPosition = this.meshFoot.getAbsolutePosition()
     
@@ -117,7 +127,7 @@ export default class LightPoints {
     })
     
     let i = 0
-    while (this.maxLights > i) {
+    while (this.maxLights > i && this.sceneLights.length >= i) {
       const sceneLight = this.sceneLights[i]
       const lightPosition = sceneLight.getAbsolutePosition()
       const dx = Math.abs(lightPosition.x - meshFootPosition.x)

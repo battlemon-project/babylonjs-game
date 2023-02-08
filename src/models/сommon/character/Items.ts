@@ -23,11 +23,13 @@ export default class Items {
   }
   
   setPlaceholders () {
-    Helpers.getMeshesByName('placeholder', true).forEach(mesh => {
-      this.placeholders.push({
-        name: mesh.id.replace('placeholder_', ''),
-        mesh
-      })
+    this.characterMeshes.forEach(mesh => {
+      if (Helpers.IsName(mesh,'placeholder', true)) {
+        this.placeholders.push({
+          name: mesh.id.replace('placeholder_', ''),
+          mesh
+        })
+      }
     })
   }
   

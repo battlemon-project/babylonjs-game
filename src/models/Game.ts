@@ -32,7 +32,7 @@ export default class Game {
         store.commit('ADD_SELF_PLAYER', playerId)
         const playerData = {
           playerId,
-          character: 'player.gltf',
+          character: 'BTLMN_Lemon.glb',
           items: [
             { placeholder: 'mask', name: 'Mask_Cowboy_Scarf.gltf' },
             { placeholder: 'weapon_r', name: 'FireArms_Revolver.gltf' }

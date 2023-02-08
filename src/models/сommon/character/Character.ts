@@ -57,10 +57,9 @@ export default class Character {
         
         this.setAnimations()
         this.setShadow(this.mesh)
-
+        
         new Items(this.playerId, newMeshes)
         
-  
         this.observer = this.scene.onBeforeRenderObservable.add(() => {
           this.beforeRender()
         })
@@ -70,8 +69,9 @@ export default class Character {
         }
       },
       undefined,
-      undefined,
-      '.gltf'
+      (scene, message, exception) => {
+        console.log(message, exception)
+      }
     )
   }
   
