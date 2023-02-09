@@ -46,13 +46,13 @@ export const Helpers = {
     return false
   },
 
-  IsName (mesh: AbstractMesh, name: string, partly = false) {
-    if (mesh.id === name) {
+  IsName (nameForCheck: string, name: string, partly = false) {
+    if (nameForCheck === name) {
       return true
     }
 
     if (partly) {
-      const nameArray = mesh.id.split('_')
+      const nameArray = nameForCheck.split('_')
       if (nameArray.length) {
         if (nameArray[0] === name) {
           return true
@@ -61,7 +61,7 @@ export const Helpers = {
     }
 
 
-    const nameArrayPoint = mesh.id.split('.')
+    const nameArrayPoint = nameForCheck.split('.')
     if (nameArrayPoint.length) {
       if (nameArrayPoint[0] === name) {
         return true
@@ -72,11 +72,11 @@ export const Helpers = {
   },
 
   getMeshesByName (name: string, partly = false) {
-    return globalThis.scene.meshes.filter(mesh => Helpers.IsName(mesh, name, partly)) as Array<Mesh>
+    return globalThis.scene.meshes.filter(mesh => Helpers.IsName(mesh.name, name, partly)) as Array<Mesh>
   },
 
   getMeshByName (scene: Scene, name: string, partly = false) {
-    return scene.meshes.find(mesh => Helpers.IsName(mesh, name, partly)) as Mesh
+    return scene.meshes.find(mesh => Helpers.IsName(mesh.name, name, partly)) as Mesh
   },
 
   getTime () {

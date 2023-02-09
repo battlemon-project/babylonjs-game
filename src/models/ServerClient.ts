@@ -22,12 +22,12 @@ export default class ServerClient {
     
     client.joinOrCreate('my_room').then(room => {
       this.room = room
-      console.info('Joined to server :' + this.playerId)
+      console.info('Joined to server: ' + this.playerId)
       
       this.room.send('newPlayer', { playerId: this.playerId })
       
       this.room.onMessage('newPlayer', (message) => {
-        console.info('New player :' + message.playerId)
+        console.info('New player: ' + message.playerId)
         this.createPlayer(message.playerId)
         room.send('helloNewPlayer', { playerId: this.playerId })
       })
@@ -60,10 +60,40 @@ export default class ServerClient {
   private createPlayer (playerId: string) {
     const playerData = {
       playerId,
-      character: 'BTLMN_Lemon.glb',
+      character: 'BTLMN_Lemon.gltf',
       items: [
         { placeholder: 'mask', name: 'Mask_Cowboy_Scarf.gltf' },
         { placeholder: 'weapon_r', name: 'FireArms_Revolver.gltf' }
+      ],
+      properties: [
+        {
+          "name": "exo_top",
+          "flavour": "ExoTop_Snowwhite"
+        },
+        {
+          "name": "exo_bot",
+          "flavour": "ExoBot_Steel"
+        },
+        {
+          "name": "feet",
+          "flavour": "Feet_Military"
+        },
+        {
+          "name": "eyes",
+          "flavour": "Eyes_Zombie"
+        },
+        {
+          "name": "hands",
+          "flavour": "Hands_Golden"
+        },
+        {
+          "name": "head",
+          "flavour": "Head_Zombie"
+        },
+        {
+          "name": "teeth",
+          "flavour": "Teeth_Sharp"
+        }
       ]
     }
     

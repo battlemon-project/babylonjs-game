@@ -18,10 +18,10 @@ export default class Animation {
   observableBeforeAnimation: any
   subscribeStore?: SubscribeStore | null
 
-  constructor (playerId: string, scene: Scene) {
+  constructor (playerId: string) {
     this.playerId = playerId
     this.store = store
-    this.scene = scene
+    this.scene = globalThis.scene
     this.animationGroups = []
     this.animationGroupCurrent = undefined
 
@@ -33,13 +33,12 @@ export default class Animation {
   }
 
   private setAnimationGroups () {
-    const idle = new Idle(this.playerId, this.scene)
+    const idle = new Idle(this.playerId)
     this.pushAnimation(idle)
-    this.pushAnimation(new Run(this.playerId, this.scene))
-    this.pushAnimation(new Sprint(this.playerId, this.scene))
-    this.pushAnimation(new JumpMiddle(this.playerId, this.scene))
-    this.pushAnimation(new JumpFinish(this.playerId, this.scene))
-    
+    this.pushAnimation(new Run(this.playerId))
+    this.pushAnimation(new Sprint(this.playerId))
+    this.pushAnimation(new JumpMiddle(this.playerId))
+    this.pushAnimation(new JumpFinish(this.playerId))
     
     if (idle.animation) {
       this.animationGroupCurrent = this.getAnimationByName('Idle_' + this.playerId)

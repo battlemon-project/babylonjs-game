@@ -10,6 +10,7 @@ const playerExample: Player = {
   id: 'new',
   character: '',
   items: [],
+  properties: [],
   move: {
     forward: {
       front: false,
@@ -37,6 +38,7 @@ export const mutations: MutationTree<Players> = {
       newPlayer.id = payload.playerId
       newPlayer.character = payload.character
       newPlayer.items = payload.items
+      newPlayer.properties = payload.properties
   
       state.list.push(newPlayer)
     }

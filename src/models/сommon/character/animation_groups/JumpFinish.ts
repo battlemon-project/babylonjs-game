@@ -8,12 +8,12 @@ export default class JumpFinish implements AnimationGroupInterface {
   autoPlayLoop: boolean
   scene: Scene
 
-  constructor (playerId: string, scene: Scene) {
+  constructor (playerId: string) {
     this.playerId = playerId
     this.weight = 0
     this.autoPlayLoop = false
-    this.scene = scene
-    this.animation = this.scene.getAnimationGroupByName('JumpFinish')
+    this.scene = globalThis.scene
+    this.animation = this.scene.getAnimationGroupByName('JumpFinish_' + playerId)
 
     this.setAnimations()
   }

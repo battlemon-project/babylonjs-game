@@ -13,6 +13,7 @@ import Environment from '@/models/scene/Environment'
 
 export default class Game {
   init () {
+    globalThis.assetContainers = []
     const canvas = document.getElementById('canvas') as HTMLCanvasElement
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
@@ -21,21 +22,52 @@ export default class Game {
     const sceneModel = new Scene(engine)
     const environment = new Environment()
 
-    sceneModel.load(() => {
+    sceneModel.load(async () => {
       new Audio()
       environment.setupHDR()
       environment.setupGlow()
       environment.setupLightAndShadow()
       
       const serverClient = new ServerClient()
+      
       serverClient.init(async (playerId: string) => {
         store.commit('ADD_SELF_PLAYER', playerId)
         const playerData = {
           playerId,
-          character: 'BTLMN_Lemon.glb',
+          character: 'BTLMN_Lemon.gltf',
           items: [
             { placeholder: 'mask', name: 'Mask_Cowboy_Scarf.gltf' },
             { placeholder: 'weapon_r', name: 'FireArms_Revolver.gltf' }
+          ],
+          properties: [
+            {
+              "name": "exo_top",
+              "flavour": "ExoTop_Snowwhite"
+            },
+            {
+              "name": "exo_bot",
+              "flavour": "ExoBot_Steel"
+            },
+            {
+              "name": "feet",
+              "flavour": "Feet_Military"
+            },
+            {
+              "name": "eyes",
+              "flavour": "Eyes_Zombie"
+            },
+            {
+              "name": "hands",
+              "flavour": "Hands_Golden"
+            },
+            {
+              "name": "head",
+              "flavour": "Head_Zombie"
+            },
+            {
+              "name": "teeth",
+              "flavour": "Teeth_Sharp"
+            }
           ]
         }
         

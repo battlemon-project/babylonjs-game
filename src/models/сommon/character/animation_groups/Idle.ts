@@ -8,12 +8,12 @@ export default class Idle implements AnimationGroupInterface {
   autoPlayLoop: boolean
   scene: Scene
 
-  constructor (playerId: string, scene: Scene) {
+  constructor (playerId: string) {
     this.playerId = playerId
     this.weight = 1
     this.autoPlayLoop = true
-    this.scene = scene
-    this.animation = this.scene.getAnimationGroupByName('Idle')
+    this.scene = globalThis.scene
+    this.animation = this.scene.getAnimationGroupByName('Idle_' + playerId)
 
     this.setAnimations()
   }

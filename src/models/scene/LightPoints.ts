@@ -108,13 +108,7 @@ export default class LightPoints {
 
   private runLights () {
     if (!this.meshFoot) {
-      console.error('Not set mesh foot')
-      return
-    }
-    
-    if (!this.sceneLights.length) {
-      console.error('Not set light points')
-      return
+      throw 'Not set mesh foot'
     }
     
     const meshFoot = this.meshFoot

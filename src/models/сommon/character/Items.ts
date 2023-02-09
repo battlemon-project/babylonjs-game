@@ -24,7 +24,7 @@ export default class Items {
   
   setPlaceholders () {
     this.characterMeshes.forEach(mesh => {
-      if (Helpers.IsName(mesh,'placeholder', true)) {
+      if (Helpers.IsName(mesh.id,'placeholder', true)) {
         this.placeholders.push({
           name: mesh.id.replace('placeholder_', ''),
           mesh
@@ -52,8 +52,7 @@ export default class Items {
               }
             })
           },undefined,
-          undefined,
-          '.gltf')
+          undefined)
       }
      
     })

@@ -14,8 +14,8 @@ export default class Rotation {
   forwardAngle: number
   isAnimated: boolean
   
-  constructor (playerId: string, scene: Scene) {
-    this.scene = scene
+  constructor (playerId: string) {
+    this.scene = globalThis.scene
     this.playerId = playerId
     this.angle = 0
     this.meshCharacter = this.scene.getMeshById('characterBody_' + this.playerId) as AbstractMesh
