@@ -1,5 +1,4 @@
 import { AssetContainer, SceneLoader } from '@babylonjs/core'
-import { result } from 'lodash'
 
 export interface Container {
   name: string;
@@ -15,20 +14,18 @@ export default class ContainerManager {
       return container.container
     }
     
-     const promise = SceneLoader.LoadAssetContainerAsync(
+    const promise = SceneLoader.LoadAssetContainerAsync(
       path,
       name,
       globalThis.scene)
-  
-    const newContainer = await promise;
-    newContainer.createRootMesh()
-  
+    
+    const newContainer = await promise
+    newContainer.removeFromScene()
+    
     globalThis.assetContainers.push({
       name: name,
       container: newContainer
     })
-  
-    newContainer.removeFromScene()
     
     return newContainer
   }

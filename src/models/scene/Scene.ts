@@ -46,8 +46,7 @@ export default class Scene {
         this.engine.runRenderLoop(() => {
           this.scene.render()
         })
-
-         //scene.debugLayer.show()
+        
       }, null, (scene, message, error) => {
         console.log(error, message)
       })

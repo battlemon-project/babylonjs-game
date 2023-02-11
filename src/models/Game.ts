@@ -10,6 +10,7 @@ import Audio from '@/models/sounds/Audio'
 import Teleport from '@/models/mehanics/Teleport'
 import ServerClient from './ServerClient'
 import Environment from '@/models/scene/Environment'
+import DevMode from '@/models/scene/DevMode'
 
 export default class Game {
   init () {
@@ -42,7 +43,7 @@ export default class Game {
           properties: [
             {
               "name": "exo_top",
-              "flavour": "ExoTop_Snowwhite"
+              "flavour": "ExoTop_Golden"
             },
             {
               "name": "exo_bot",
@@ -80,6 +81,7 @@ export default class Game {
         new LightPoints()
         new Doors()
         new LowerFloor()
+        new DevMode()
         
         playerSelf.loadCharacter( () => {
           store.commit('LOADING_TOGGLE')

@@ -1,5 +1,5 @@
 import {
-  AbstractMesh,
+  AbstractMesh, AnimationGroup,
   DirectionalLight,
   Mesh,
   Nullable,
@@ -10,7 +10,6 @@ import {
 import Animation from './Animation'
 import Rotation from './Rotation'
 import store from '@/store/index'
-import Items from '@/models/сommon/character/Items'
 import ContainerManager from '@/models/scene/ContainerManager'
 import { Helpers } from '@/models/Helpers'
 import { Property } from '@/store/players/types'
@@ -40,148 +39,94 @@ export default class Character {
   }
   
   load (callback: any) {
-    const assetContainer = ContainerManager.getContainer('BTLMN_Lemon.gltf', '/resources/graphics/characters/')
+    const path = '/resources/graphics/characters/'
+    const assetContainer = ContainerManager.getContainer('BTLMN_Lemon.gltf', path)
     
     assetContainer.then((container) => {
-      const instanceContainer = container.instantiateModelsToScene((name) => {
-        if (name === '__root__') {
-          return this.meshRootId
-        }
-        
-        if (name === 'Body') {
-          return this.meshBodyId
-        }
-        
-        return name + '_' + this.playerId
-      }, false, {doNotInstantiate: (node) => {
-        return this.filterProperties(node)
-      }})
+      const rootMesh = container.meshes.find(mesh => mesh.id === '__root__')
       
-      const meshes = instanceContainer.rootNodes[0].getChildMeshes()
-      
-      meshes.forEach(mesh => {
-        mesh.id = mesh.name
-      })
-      
-      this.meshBody = meshes.find(mesh => mesh.id === this.meshBodyId)
-      this.meshRoot = meshes.find(mesh => mesh.id === this.meshRootId)
-      
-      if (!this.meshBody) {
-        throw 'Not found mesh Player Body'
+      if (rootMesh) {
+        this.instanceMeshes(rootMesh as Mesh)
+        this.setAnimations(container.animationGroups)
+        this.setShadow()
+  
+        this.observer = this.scene.onBeforeRenderObservable.add(() => {
+          this.beforeRender()
+        })
+  
+        callback()
       }
-      
-      if (!this.meshFoot) {
-        throw 'Not found mesh Player Foot'
-      }
-      
-      if (!this.meshRoot) {
-        throw 'Not found mesh Root'
-      }
-      
-      this.meshBody.isVisible = false
-      this.meshBody.rotationQuaternion = null
-      this.meshRoot.resetLocalMatrix()
-      this.meshRoot.setParent(null)
-      
-      meshes.forEach(mesh => {
-        mesh.isPickable = false
-      })
-      
-      this.setAnimations()
-      this.setShadow()
-      
-      this.observer = this.scene.onBeforeRenderObservable.add(() => {
-        this.beforeRender()
-      })
-      
-      callback()
     })
   }
   
-  filterProperties (node: TransformNode) {
-    const playerStore = store.getters.getPlayerById(this.playerId)
-    const properties = playerStore.properties
+  instanceMeshes(rootMesh: Mesh) {
+    const newRootMesh = rootMesh.clone(this.meshRootId, null, true)
+    const meshes = rootMesh.getChildMeshes() as Array<Mesh>
     
-    console.log(node.name)
-    
-    if (!Helpers.IsName(node.name,'Body') && !Helpers.IsName(node.name,'placeholder', true)) {
-      if (!properties.find((property: Property) => property.flavour === node.name)) {
-        return true
+   meshes.forEach((mesh) => {
+      if (this.filterProperties(mesh)) {
+        if (mesh.geometry) {
+          let nameNew = mesh.name + '_' + this.playerId
+          
+          if (mesh.name === 'Body') {
+            nameNew = this.meshBodyId
+          }
+          
+          const newMesh = mesh.createInstance(nameNew)
+          newMesh.setParent(newRootMesh)
+        }
       }
+    })
+    
+  
+    const meshBody = this.scene.getMeshByName(this.meshBodyId)
+    const meshRoot = this.scene.getMeshByName(this.meshRootId)
+  
+    if (!meshBody) {
+      throw 'Not found mesh Player Body'
     }
   
-    return false
+    if (!this.meshFoot) {
+      throw 'Not found mesh Player Foot'
+    }
+  
+    if (!meshRoot) {
+      throw 'Not found mesh Root'
+    }
+  
+    this.meshBody = meshBody
+    this.meshRoot = meshRoot
+  
+    this.meshBody.id = this.meshBodyId
+    this.meshRoot.id = this.meshBodyId
+  
+    this.meshBody.isVisible = true
+    this.meshBody.rotationQuaternion = null
+    this.meshRoot.resetLocalMatrix()
   }
   
-  //load (callback: any = null) {
-  //   const playerStore = store.getters.getPlayerById(this.playerId)
+  filterProperties (mesh: AbstractMesh) {
+      const playerStore = store.getters.getPlayerById(this.playerId)
+      const properties = playerStore.properties
+      
+      if (!Helpers.IsName(mesh.name,'placeholder', true)
+        && mesh.name !== 'Body'
+        && mesh.name !== '__root__'
+        && mesh.name !== 'assetContainerRootMesh'
+      ) {
+        if (!properties.find((property: Property) => property.flavour === mesh.name)) {
+          return false
+        }
+      }
   
-  /*const instanceHolder = this.scene.getNodeByName('player_instance_holder')
-  const instanceHolderMeshes = instanceHolder?.getChildMeshes() as Array<Mesh>
-  
-  if (!instanceHolderMeshes) {
-    return null;
+    return true
   }
   
-  instanceHolderMeshes.forEach((mesh: Mesh) => {
-    const meshInstance = mesh.createInstance(mesh.id + '_' + this.playerId)
-    meshInstance.isVisible = true
-    console.log(meshInstance.id)
-  })
-
-  this.observer = this.scene.onBeforeRenderObservable.add(() => {
-    this.beforeRender()
-  })
-
-  callback()*/
-  
-  /* SceneLoader.ImportMesh(
-     '',
-     '/resources/graphics/characters/',
-     character + '?time=' + Date.now(),
-     this.scene,
-     (newMeshes) => {
-       newMeshes.forEach(mesh => {
-         mesh.isPickable = false
-       })
-       
-       this.mesh = newMeshes.find(mesh => mesh.id === 'Body')
-       this.rootMesh = newMeshes.find(mesh => mesh.id === '__root__')
-       
-       if (!this.mesh || !this.rootMesh) {
-         console.error('Not find Body mesh in load character')
-         return
-       }
-       
-       this.rootMesh.id = 'characterRoot_' + this.playerId
-       this.mesh.id = 'characterBody_' + this.playerId
-       
-       this.mesh.rotationQuaternion = null
-       this.mesh.isVisible = false
-       this.rootMesh.resetLocalMatrix()
-       
-       this.setAnimations()
-       this.setShadow(this.mesh)
-       
-       new Items(this.playerId, newMeshes)
-       
-       this.observer = this.scene.onBeforeRenderObservable.add(() => {
-         this.beforeRender()
-       })
-       
-       if (callback) {
-         callback()
-       }
-     },
-     undefined,
-     (scene, message, exception) => {
-       console.log(message, exception)
-     }
-   )*/
-  
-  // }
-  
-  private setAnimations () {
+  private setAnimations (animationGroups: Array<AnimationGroup>) {
+    animationGroups.forEach(group => {
+      group.clone(group.name + '_' + this.playerId)
+    })
+    
     this.animation = new Animation(this.playerId)
     this.rotation = new Rotation(this.playerId)
   }
