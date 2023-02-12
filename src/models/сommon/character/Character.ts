@@ -13,6 +13,7 @@ import store from '@/store/index'
 import ContainerManager from '@/models/scene/ContainerManager'
 import { Helpers } from '@/models/Helpers'
 import { Property } from '@/store/players/types'
+import Items from '@/models/сommon/character/Items'
 
 export default class Character {
   scene: Scene
@@ -20,7 +21,6 @@ export default class Character {
   meshFoot: Mesh | undefined
   meshBody?: AbstractMesh
   meshRoot?: AbstractMesh
-  runWalk: boolean
   playerId: string
   meshBodyId: string
   meshRootId: string
@@ -32,10 +32,8 @@ export default class Character {
     this.scene = globalThis.scene
     this.playerId = playerId
     this.meshFoot = this.scene.getMeshById('playerFoot_' + playerId) as Mesh
-    this.runWalk = false
     this.meshBodyId = 'characterBody_' + this.playerId
     this.meshRootId = 'characterRoot_' + this.playerId
-    this.meshBody = undefined
   }
   
   load (callback: any) {
@@ -43,42 +41,31 @@ export default class Character {
     const assetContainer = ContainerManager.getContainer('BTLMN_Lemon.gltf', path)
     
     assetContainer.then((container) => {
-      const rootMesh = container.meshes.find(mesh => mesh.id === '__root__')
+      const resources = container.instantiateModelsToScene((sourceName) => {
+        if (sourceName == 'Body') {
+          return this.meshBodyId
+        }
+  
+        if (sourceName == '__root__') {
+          return this.meshRootId
+        }
+        
+        return sourceName + '_' + this.playerId
+      })
       
-      if (rootMesh) {
-        this.instanceMeshes(rootMesh as Mesh)
-        this.setAnimations(container.animationGroups)
-        this.setShadow()
+      this.setMeshes()
+      this.setAnimations()
+      this.setItems()
   
-        this.observer = this.scene.onBeforeRenderObservable.add(() => {
-          this.beforeRender()
-        })
+      callback()
   
-        callback()
-      }
+      this.observer = this.scene.onBeforeRenderObservable.add(() => {
+        this.beforeRender()
+      })
     })
   }
   
-  instanceMeshes(rootMesh: Mesh) {
-    const newRootMesh = rootMesh.clone(this.meshRootId, null, true)
-    const meshes = rootMesh.getChildMeshes() as Array<Mesh>
-    
-   meshes.forEach((mesh) => {
-      if (this.filterProperties(mesh)) {
-        if (mesh.geometry) {
-          let nameNew = mesh.name + '_' + this.playerId
-          
-          if (mesh.name === 'Body') {
-            nameNew = this.meshBodyId
-          }
-          
-          const newMesh = mesh.createInstance(nameNew)
-          newMesh.setParent(newRootMesh)
-        }
-      }
-    })
-    
-  
+  setMeshes() {
     const meshBody = this.scene.getMeshByName(this.meshBodyId)
     const meshRoot = this.scene.getMeshByName(this.meshRootId)
   
@@ -95,38 +82,52 @@ export default class Character {
     }
   
     this.meshBody = meshBody
-    this.meshRoot = meshRoot
-  
-    this.meshBody.id = this.meshBodyId
-    this.meshRoot.id = this.meshBodyId
-  
-    this.meshBody.isVisible = true
     this.meshBody.rotationQuaternion = null
+    this.meshBody.resetLocalMatrix()
+    this.meshBody.isVisible = false
+    
+    this.meshRoot = meshRoot
+    this.meshRoot.id = this.meshRoot.name
+    this.meshRoot.rotationQuaternion = null
     this.meshRoot.resetLocalMatrix()
+    
+    this.meshRoot.getChildMeshes().forEach(mesh => {
+      mesh.id = mesh.name
+    })
+  
+    this.disposeNotActiveProperties()
   }
   
   filterProperties (mesh: AbstractMesh) {
       const playerStore = store.getters.getPlayerById(this.playerId)
       const properties = playerStore.properties
       
-      if (!Helpers.IsName(mesh.name,'placeholder', true)
-        && mesh.name !== 'Body'
-        && mesh.name !== '__root__'
-        && mesh.name !== 'assetContainerRootMesh'
-      ) {
-        if (!properties.find((property: Property) => property.flavour === mesh.name)) {
-          return false
-        }
+      if (!Helpers.IsName(mesh.name,'placeholder', true)) {
+        const propery = properties.find((property: Property) => {
+          return Helpers.IsName(mesh.name, property.flavour, true)
+        })
+        
+        return propery
       }
   
     return true
   }
   
-  private setAnimations (animationGroups: Array<AnimationGroup>) {
-    animationGroups.forEach(group => {
-      group.clone(group.name + '_' + this.playerId)
+  private disposeNotActiveProperties()
+  {
+    this.meshBody?.getChildMeshes().forEach((mesh) => {
+      if (!this.filterProperties(mesh)) {
+        mesh.dispose()
+      }
     })
-    
+  }
+  
+  private setItems()
+  {
+      new Items(this.playerId)
+  }
+  
+  private setAnimations () {
     this.animation = new Animation(this.playerId)
     this.rotation = new Rotation(this.playerId)
   }

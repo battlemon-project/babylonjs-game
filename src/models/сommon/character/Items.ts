@@ -1,61 +1,73 @@
-import { AbstractMesh, SceneLoader } from '@babylonjs/core'
+import { AbstractMesh, Scene } from '@babylonjs/core'
 import { Helpers } from '@/models/Helpers'
 import store from '@/store/index'
 import { Item, Player } from '@/store/players/types'
-
-interface Placeholder {
-  name: string;
-  mesh: AbstractMesh;
-}
+import ContainerManager from '@/models/scene/ContainerManager'
 
 export default class Items {
   characterMeshes: AbstractMesh[]
-  placeholders: Array<Placeholder>
+  placeholders: AbstractMesh[]
   playerId: string
+  scene: Scene
   
-  constructor (playerId: string, characterMeshes: AbstractMesh[]) {
+  constructor (playerId: string) {
     this.playerId = playerId
-    this.characterMeshes = characterMeshes
+    this.scene = globalThis.scene
+    
+    const bodyMesh = scene.getMeshById('characterBody_' + this.playerId) as AbstractMesh
+    this.characterMeshes = bodyMesh.getChildMeshes()
     this.placeholders = []
     
     this.setPlaceholders()
     this.setItems()
   }
   
-  setPlaceholders () {
+  private setPlaceholders () {
     this.characterMeshes.forEach(mesh => {
-      if (Helpers.IsName(mesh.id,'placeholder', true)) {
-        this.placeholders.push({
-          name: mesh.id.replace('placeholder_', ''),
-          mesh
-        })
+      if (Helpers.IsName(mesh.id, 'placeholder', true)) {
+        mesh.isVisible = false
+        this.placeholders.push(mesh)
       }
     })
   }
   
-  setItems(){
+  private setItems () {
     const storePlayer = store.getters.getPlayerById(this.playerId) as Player
-  
-    storePlayer.items.forEach((item: Item) => {
-      const placeholder = this.placeholders.find(placeholder => placeholder.name === item.placeholder)
-  
-      if (placeholder) {
-        SceneLoader.ImportMesh(
-          '',
-          '/resources/graphics/items/',
-          item.name + '?time=' + Date.now(),
-          globalThis.scene,
-          (newMeshes) => {
-            newMeshes.forEach(mesh => {
-              if (mesh.id != '__root__') {
-                mesh.parent = placeholder.mesh
-              }
-            })
-          },undefined,
-          undefined)
-      }
-     
-    })
     
+    storePlayer.items.forEach((item: Item) => {
+      const placeholder = this.placeholders.find(placeholder => {
+        return Helpers.IsName(placeholder.id, item.placeholder, true)
+      })
+      
+      if (!placeholder) {
+        return null
+      }
+      
+      const path = '/resources/graphics/items/'
+      const assetContainer = ContainerManager.getContainer(item.name, path)
+      const rootId = '__root__item_' + item.placeholder + '_' + this.playerId
+      
+      assetContainer.then((container) => {
+        const resources = container.instantiateModelsToScene((sourceName) => {
+          if (sourceName == '__root__') {
+            return rootId
+          }
+          
+          return sourceName + '_' + this.playerId
+        })
+        
+        const rootMesh = resources.rootNodes[0]
+        rootMesh.id = rootMesh.name
+        
+        const meshes = rootMesh.getChildMeshes()
+        
+        meshes.forEach(mesh => {
+          mesh.id = mesh.name
+        })
+        
+        rootMesh.parent = placeholder
+      })
+      
+    })
   }
 }

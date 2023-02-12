@@ -46,26 +46,13 @@ export const Helpers = {
     return false
   },
 
-  IsName (nameForCheck: string, name: string, partly = false) {
-    if (nameForCheck === name) {
+  IsName (text: string, find: string, partly = false) {
+    if (text === find) {
       return true
     }
 
     if (partly) {
-      const nameArray = nameForCheck.split('_')
-      if (nameArray.length) {
-        if (nameArray[0] === name) {
-          return true
-        }
-      }
-    }
-
-
-    const nameArrayPoint = nameForCheck.split('.')
-    if (nameArrayPoint.length) {
-      if (nameArrayPoint[0] === name) {
-        return true
-      }
+      return text.search(find) !== -1
     }
 
     return false

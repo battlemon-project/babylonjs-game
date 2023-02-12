@@ -14,13 +14,12 @@ export default class ContainerManager {
       return container.container
     }
     
-    const promise = SceneLoader.LoadAssetContainerAsync(
+    const newContainer = await SceneLoader.LoadAssetContainerAsync(
       path,
       name,
       globalThis.scene)
     
-    const newContainer = await promise
-    newContainer.removeFromScene()
+    newContainer.removeAllFromScene()
     
     globalThis.assetContainers.push({
       name: name,

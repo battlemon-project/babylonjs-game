@@ -18,6 +18,7 @@ export default class Rotation {
     this.scene = globalThis.scene
     this.playerId = playerId
     this.angle = 0
+    // TODO: вывести в константы признак meshId
     this.meshCharacter = this.scene.getMeshById('characterBody_' + this.playerId) as AbstractMesh
     this.meshFoot = this.scene.getMeshById('playerFoot_' + this.playerId) as AbstractMesh
     this.animation = undefined
