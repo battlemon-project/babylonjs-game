@@ -161,6 +161,6 @@ export default class Character {
       this.scene.onBeforeRenderObservable.remove(this.observer)
     }
     
-    this.mesh?.dispose()
+    this.meshRoot?.dispose()
   }
 }

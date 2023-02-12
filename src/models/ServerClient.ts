@@ -43,7 +43,6 @@ export default class ServerClient {
       })
       
       this.room.onMessage('leavePlayer', (leavePlayerId) => {
-        this.subscribeStore?.unsubscribeAll()
         const player = this.players.find(player => player.playerId = leavePlayerId)
         player?.dispose()
         
@@ -51,9 +50,6 @@ export default class ServerClient {
       })
       
       this.syncPlayer()
-      
-    }).catch(e => {
-      console.log('JOIN ERROR', e)
     })
   }
   

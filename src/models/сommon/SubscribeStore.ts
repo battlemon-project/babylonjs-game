@@ -10,6 +10,8 @@ export default class SubscribeStore {
     this.playerId = playerId
     this.store = store
     this.unsubscribes = []
+    
+    this.dispose()
   }
   
   move (callbackEvent: any) {
@@ -17,6 +19,10 @@ export default class SubscribeStore {
     
     const unsubscribe = this.store.subscribe(() => {
       const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+      
       const stateMove = state.move
       const equal = isEqual(oldMove, stateMove)
       
@@ -43,6 +49,10 @@ export default class SubscribeStore {
   
     const unsubscribe = this.store.subscribe(() => {
       const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+      
       const stateForward = state.move.forward
       const equal = isEqual(oldForward, stateForward)
 
@@ -63,6 +73,10 @@ export default class SubscribeStore {
   
     const unsubscribe = this.store.subscribe(() => {
       const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+      
       const stateMove = state.move
 
       if (oldStateJump !== stateMove.jump) {
@@ -83,6 +97,10 @@ export default class SubscribeStore {
   
     const unsubscribe = this.store.subscribe(() => {
       const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+      
       const stateMove = state.move
 
       if (oldState !== stateMove.isFly) {
@@ -105,6 +123,10 @@ export default class SubscribeStore {
   
     const unsubscribe = this.store.subscribe(() => {
       const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+      
       const stateMove = state.move
 
       if (oldState !== stateMove.isFly) {
@@ -129,7 +151,12 @@ export default class SubscribeStore {
     }
   
     const unsubscribe = this.store.subscribe(() => {
-      const stateMove = this.getPlayerById().move
+      const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+      
+      const stateMove = state.move
 
       if (oldStateRotate.rotateX !== stateMove.rotate.x || oldStateRotate.rotateY !== stateMove.rotate.y) {
         oldStateRotate.rotateX = stateMove.rotate.x
@@ -152,7 +179,12 @@ export default class SubscribeStore {
     }
   
     const unsubscribe = this.store.subscribe(() => {
-      const stateMove = this.getPlayerById().move
+      const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+  
+      const stateMove = state.move
       const statePosition = stateMove.syncData.position
 
       if (!isEqual(statePosition, oldStatePosition)) {
@@ -174,7 +206,12 @@ export default class SubscribeStore {
     }
   
     const unsubscribe = this.store.subscribe(() => {
-      const stateMove = this.getPlayerById().move
+      const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+  
+      const stateMove = state.move
       const stateRotation = stateMove.syncData.rotation
 
       if (!isEqual(stateRotation, oldStateRotation)) {
@@ -189,29 +226,17 @@ export default class SubscribeStore {
     })
   }
   
-  batteryCharge (callbackEvent: any) {
-    let oldCharge = 0
-  
-    const unsubscribe = this.store.subscribe(() => {
-      const charge = store.getters.batteryCharge
-      
-      if (oldCharge !== charge) {
-        oldCharge = charge
-        callbackEvent(charge)
-      }
-    })
-  
-    this.unsubscribes.push({
-      name: 'batteryCharge',
-      unsubscribe
-    })
-  }
-  
   syncData (callbackEvent: any) {
     let oldSyncData = {}
   
     const unsubscribe = this.store.subscribe(() => {
-      const syncData = this.getPlayerById().move.syncData
+      const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+  
+      const stateMove = state.move
+      const syncData = stateMove.syncData
     
       if (!isEqual(syncData, oldSyncData)) {
         oldSyncData = {...syncData}
@@ -229,11 +254,14 @@ export default class SubscribeStore {
     let oldPlayer = {}
   
     const unsubscribe = this.store.subscribe(() => {
-      const player = this.getPlayerById()
+      const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
     
-      if (!isEqual(player, oldPlayer)) {
-        oldPlayer = JSON.parse(JSON.stringify(player))
-        callbackEvent(player)
+      if (!isEqual(state, oldPlayer)) {
+        oldPlayer = JSON.parse(JSON.stringify(state))
+        callbackEvent(state)
       }
     })
   
@@ -244,7 +272,30 @@ export default class SubscribeStore {
   }
 
   getPlayerById () {
-    return store.getters.getPlayerById(this.playerId)
+    const state = store.getters.getPlayerById(this.playerId)
+    
+    if (!state) {
+      console.info('SubscribeStore: not found state by playerId: ' + this.playerId)
+      this.unsubscribeAll()
+    }
+    
+    return state
+  }
+  
+  private dispose()
+  {
+    const unsubscribe = this.store.subscribe(() => {
+      const player = store.getters.getPlayerById(this.playerId)
+      
+      if (!player) {
+        this.unsubscribeAll()
+      }
+    })
+  
+    this.unsubscribes.push({
+      name: 'dispose',
+      unsubscribe
+    })
   }
   
   unsubscribeAll() {

@@ -63,7 +63,10 @@ export default class Animation {
   
     this.subscribeStore.move((move: Move) => {
       if (!move.isFly && !move.jump) {
-        this.blending(this.getAnimationByState())
+        const animation = this.getAnimationByState()
+        if (animation) {
+          this.blending(animation)
+        }
       }
     })
   
@@ -83,7 +86,10 @@ export default class Animation {
       const jumpFinishAnimation = animationJumpFinish.animation.targetedAnimations[0].animation
   
       const JumpFinishAnimationEvent = new AnimationEvent(25, () => {
-        this.blending(this.getAnimationByState())
+        const animation = this.getAnimationByState()
+        if (animation) {
+          this.blending(animation)
+        }
       })
   
       jumpFinishAnimation.addEvent(JumpFinishAnimationEvent)
@@ -92,6 +98,10 @@ export default class Animation {
   
   private getAnimationByState() {
     const statePlayer = store.getters.getPlayerById(this.playerId)
+    if (!statePlayer) {
+      return null
+    }
+    
     const move = statePlayer.move
     const animationIdle = this.getAnimationByName('Idle_' + this.playerId)
     const animationRun = this.getAnimationByName('Run_' + this.playerId)
@@ -145,7 +155,6 @@ export default class Animation {
   }
   
   dispose () {
-    this.subscribeStore?.unsubscribeAll()
     this.scene.onBeforeAnimationsObservable.removeCallback(this.observableBeforeAnimation)
   }
 }

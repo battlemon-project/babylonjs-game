@@ -13,6 +13,7 @@ export default class Rotation {
   animatable: any
   forwardAngle: number
   isAnimated: boolean
+  syncIntervalId: any
   
   constructor (playerId: string) {
     this.scene = globalThis.scene
@@ -28,10 +29,6 @@ export default class Rotation {
 
     this.setAnimation()
     this.subscribe()
-    
-    setInterval(() => {
-      this.setAngle()
-    }, 100)
   }
 
   private setAnimation () {
@@ -47,7 +44,7 @@ export default class Rotation {
     this.animation.setEasingFunction(easingFunction)
   }
 
-  private setAngle (animate = true) {
+  private setAngle () {
     const stateForward = store.getters.getPlayerById(this.playerId).move.forward
 
     if (!stateForward.isMoving) {
@@ -147,13 +144,17 @@ export default class Rotation {
       const stateForward = store.getters.getPlayerById(this.playerId).move.forward
       
       if (stateForward.isMoving) {
-        this.setAngle(false)
+        this.setAngle()
       }
     })
   
     this.subscribeStore.forward(() => {
       this.setAngle()
     })
+  
+    this.syncIntervalId = setInterval(() => {
+      this.setAngle()
+    }, 100)
   }
   
   private stopAnimation()
@@ -164,6 +165,8 @@ export default class Rotation {
   }
   
   dispose () {
-    this.subscribeStore?.unsubscribeAll()
+    if (this.syncIntervalId) {
+      clearInterval(this.syncIntervalId)
+    }
   }
 }
