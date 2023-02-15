@@ -3,6 +3,7 @@ import { Helpers } from '@/models/Helpers'
 import store from '@/store/index'
 import { Item, Player } from '@/store/players/types'
 import ContainerManager from '@/models/scene/ContainerManager'
+import placeholder from 'lodash/fp/placeholder'
 
 export default class Items {
   characterMeshes: AbstractMesh[]
@@ -35,11 +36,21 @@ export default class Items {
     const storePlayer = store.getters.getPlayerById(this.playerId) as Player
     
     storePlayer.items.forEach((item: Item) => {
-      const placeholder = this.placeholders.find(placeholder => {
+      let placeholder = this.placeholders.find(placeholder => {
         return Helpers.IsName(placeholder.id, item.type, true)
       })
       
+      //TODO !!!!
+      if (item.type === 'fire_arms') {
+        placeholder = this.placeholders.find(placeholder => placeholder.id === 'placeholder_weapon_r_' + this.playerId)
+      }
+  
+      if (item.type === 'cold_arms') {
+        placeholder = this.placeholders.find(placeholder => placeholder.id === 'placeholder_scabbard_' + this.playerId)
+      }
+      
       if (!placeholder) {
+        console.log(item.type, item.flavour)
         return null
       }
       
@@ -77,7 +88,9 @@ export default class Items {
           mesh.checkCollisions = false
         })
         
-        rootMesh.parent = placeholder
+        if (placeholder) {
+          rootMesh.parent = placeholder
+        }
       })
       
     })

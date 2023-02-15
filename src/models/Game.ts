@@ -6,6 +6,7 @@ import ServerClient from './ServerClient'
 import DevMode from '@/models/scene/DevMode'
 import PlayerSelf from '@/models/playerSelf/Player'
 import Player from '@/models/player/Player'
+import LightPoints from '@/models/scene/LightPoints'
 
 export default class Game {
   players?: Array<Player>
@@ -38,6 +39,8 @@ export default class Game {
             store.commit('LOADING_TOGGLE')
             
             console.info('Self player ' + playerId + ' created!')
+  
+            serverClient.syncPlayer()
           } else {
             this.players?.push(new Player(mutation.payload.id))
             console.info('Player ' + playerId + ' created!')
@@ -59,7 +62,7 @@ export default class Game {
   }
   
   setClassesGame () {
-    // new LightPoints()
+    new LightPoints()
     new DevMode()
   }
   

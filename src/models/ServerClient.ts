@@ -1,5 +1,4 @@
 import * as Colyseus from 'colyseus.js'
-import Player from '@/models/player/Player'
 import store from '@/store'
 import SubscribeStore from '@/models/сommon/SubscribeStore'
 
@@ -9,12 +8,9 @@ export default class ServerClient {
   room?: Colyseus.Room | null
   subscribeStore?: SubscribeStore
   
-  // players: Array<Player>
-  
   constructor (playerId: string) {
     this.sessionId = null
     this.room = null
-    // this.players = []
     this.playerId = playerId
   }
   
@@ -38,14 +34,13 @@ export default class ServerClient {
       this.room.onMessage('syncPlayer', (message) => {
         store.commit('SYNC_PLAYER', message.player)
       })
-      
-      // this.syncPlayer()
     })
   }
   
-  private syncPlayer () {
+  public syncPlayer () {
     if (this.playerId && this.room && typeof this.room !== 'undefined') {
       this.subscribeStore = new SubscribeStore(this.playerId)
+      
       this.subscribeStore.syncPlayer((player: any) => {
         this.room?.send('syncPlayer', { playerId: this.playerId, player })
       })
