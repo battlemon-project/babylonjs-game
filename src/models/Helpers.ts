@@ -98,5 +98,18 @@ export const Helpers = {
     debugmat.diffuseColor = new Color3(0, 1, 0)
     debugmat.wireframe = true
     ellipsoid.material = debugmat
+  },
+  isFile(url: string) {
+    if (url) {
+      const split = url.split('/')
+      if (split) {
+        const pop = split.pop()
+        if (pop) {
+          return pop.indexOf('.') > 0
+        }
+      }
+    }
+    
+    return false
   }
 }

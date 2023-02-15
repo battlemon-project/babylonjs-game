@@ -8,97 +8,39 @@ export default class ServerClient {
   playerId?: string
   room?: Colyseus.Room | null
   subscribeStore?: SubscribeStore
-  players: Array<Player>
   
-  constructor () {
+  // players: Array<Player>
+  
+  constructor (playerId: string) {
     this.sessionId = null
     this.room = null
-    this.players = []
+    // this.players = []
+    this.playerId = playerId
   }
   
-  init (callback: any) {
+  init () {
     const client = new Colyseus.Client(process.env.VUE_APP_SERVER_DOMAIN)
-    this.playerId = ServerClient.getFakeId()
     
     client.joinOrCreate('my_room').then(room => {
       this.room = room
-      console.info('Joined to server: ' + this.playerId)
+      this.room.state.players.onAdd = (player: any) => {
+        store.commit('ADD_PLAYER', player)
+      }
+  
+      this.room.state.players.onRemove = (player: any) => {
+        store.commit('REMOVE_PLAYER', player.id)
+      }
       
-      this.room.send('newPlayer', { playerId: this.playerId })
+      console.info('Joined to server room')
       
-      this.room.onMessage('newPlayer', (message) => {
-        console.info('New player: ' + message.playerId)
-        this.createPlayer(message.playerId)
-        room.send('helloNewPlayer', { playerId: this.playerId })
-      })
-      
-      this.room.onMessage('helloNewPlayer', (message) => {
-        this.createPlayer(message.playerId)
-      })
-      
-      callback(this.playerId)
+      this.room.send('createPlayer', { playerId: this.playerId })
       
       this.room.onMessage('syncPlayer', (message) => {
         store.commit('SYNC_PLAYER', message.player)
       })
       
-      this.room.onMessage('leavePlayer', (leavePlayerId) => {
-        const player = this.players.find(player => player.playerId = leavePlayerId)
-        player?.dispose()
-        
-        store.commit('DISPOSE_PLAYER', leavePlayerId)
-      })
-      
-      this.syncPlayer()
+      // this.syncPlayer()
     })
-  }
-  
-  private createPlayer (playerId: string) {
-    const playerData = {
-      playerId,
-      character: 'BTLMN_Lemon.gltf',
-      items: [
-        { placeholder: 'mask', name: 'Mask_Cowboy_Scarf.gltf' },
-        { placeholder: 'weapon_r', name: 'FireArms_Revolver.gltf' }
-      ],
-      properties: [
-        {
-          "name": "exo_top",
-          "flavour": "ExoTop_Snowwhite"
-        },
-        {
-          "name": "exo_bot",
-          "flavour": "ExoBot_Steel"
-        },
-        {
-          "name": "feet",
-          "flavour": "Feet_Military"
-        },
-        {
-          "name": "eyes",
-          "flavour": "Eyes_Zombie"
-        },
-        {
-          "name": "hands",
-          "flavour": "Hands_Golden"
-        },
-        {
-          "name": "head",
-          "flavour": "Head_Zombie"
-        },
-        {
-          "name": "teeth",
-          "flavour": "Teeth_Sharp"
-        }
-      ]
-    }
-    
-    store.commit('ADD_PLAYER', playerData)
-    this.players.push(new Player(playerId))
-  }
-  
-  private static getFakeId () {
-    return 'player_' + Math.random()
   }
   
   private syncPlayer () {

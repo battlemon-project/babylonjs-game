@@ -103,7 +103,6 @@ export default class Camera {
     }, 100)
   }
   
-  
   private static getIstMoving()
   {
     const playerState = store.getters.getPlayerById(store.state.player.id) as Player // TODO: дописать interval на смену move

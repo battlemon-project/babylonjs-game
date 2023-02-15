@@ -20,6 +20,7 @@ export default class Player {
   }
   
   dispose() {
+    console.log('try desp')
     this.controller?.dispose()
     this.character.dispose()
     this.body.dispose()

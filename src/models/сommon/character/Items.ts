@@ -36,7 +36,7 @@ export default class Items {
     
     storePlayer.items.forEach((item: Item) => {
       const placeholder = this.placeholders.find(placeholder => {
-        return Helpers.IsName(placeholder.id, item.placeholder, true)
+        return Helpers.IsName(placeholder.id, item.type, true)
       })
       
       if (!placeholder) {
@@ -44,10 +44,20 @@ export default class Items {
       }
       
       const path = '/resources/graphics/items/'
-      const assetContainer = ContainerManager.getContainer(item.name, path)
-      const rootId = '__root__item_' + item.placeholder + '_' + this.playerId
+      const assetContainer = ContainerManager.getContainer(item.flavour + '.gltf', path)
+      
+      if (!assetContainer) {
+        console.error('Container item not load :' + item.flavour)
+        return null
+      }
+      
+      const rootId = '__root__item_' + item.flavour + '_' + this.playerId
       
       assetContainer.then((container) => {
+        if (!container) {
+          return null
+        }
+        
         const resources = container.instantiateModelsToScene((sourceName) => {
           if (sourceName == '__root__') {
             return rootId
@@ -63,6 +73,8 @@ export default class Items {
         
         meshes.forEach(mesh => {
           mesh.id = mesh.name
+          mesh.isPickable = false
+          mesh.checkCollisions = false
         })
         
         rootMesh.parent = placeholder

@@ -38,6 +38,7 @@ export default class Controller {
   }
   
   dispose () {
+    this.subscribeStore?.unsubscribeAll()
     this.move.dispose()
   }
 

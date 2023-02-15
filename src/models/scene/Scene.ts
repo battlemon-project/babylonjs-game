@@ -9,6 +9,7 @@ import {
 import '@babylonjs/core/Debug/debugLayer'
 import '@babylonjs/inspector'
 import store from "@/store";
+import Environment from '@/models/scene/Environment'
 
 export default class Scene {
     scene: BabylonScene
@@ -66,5 +67,13 @@ export default class Scene {
       const options = new SceneOptimizerOptions(60, 1000)
       const optimizer = new SceneOptimizer(scene, options)
       optimizer.start()
+    }
+    
+    setEnvironment()
+    {
+      const environment = new Environment()
+      environment.setupHDR()
+      environment.setupGlow()
+      environment.setupLightAndShadow()
     }
 }

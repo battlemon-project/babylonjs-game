@@ -20,8 +20,8 @@ export interface Move {
 }
 
 export interface Item {
-  placeholder: string;
-  name: string;
+  type: string;
+  flavour: string;
 }
 
 export interface Property {

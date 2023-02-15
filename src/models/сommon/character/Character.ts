@@ -1,12 +1,4 @@
-import {
-  AbstractMesh, AnimationGroup,
-  DirectionalLight,
-  Mesh,
-  Nullable,
-  Observer,
-  Scene,
-  ShadowGenerator, TransformNode,
-} from '@babylonjs/core'
+import { AbstractMesh, DirectionalLight, Mesh, Nullable, Observer, Scene, ShadowGenerator, } from '@babylonjs/core'
 import Animation from './Animation'
 import Rotation from './Rotation'
 import store from '@/store/index'
@@ -38,10 +30,15 @@ export default class Character {
   
   load (callback: any) {
     const path = '/resources/graphics/characters/'
+    // TODO: взять из store название gltf
     const assetContainer = ContainerManager.getContainer('BTLMN_Lemon.gltf', path)
     
     assetContainer.then((container) => {
-      const resources = container.instantiateModelsToScene((sourceName) => {
+      if (!container) {
+        throw 'Not found container ' + path + 'BTLMN_Lemon.gltf'
+      }
+      
+      container.instantiateModelsToScene((sourceName) => {
         if (sourceName == 'Body') {
           return this.meshBodyId
         }
@@ -56,6 +53,7 @@ export default class Character {
       this.setMeshes()
       this.setAnimations()
       this.setItems()
+      this.setShadow()
   
       callback()
   
@@ -93,6 +91,8 @@ export default class Character {
     
     this.meshRoot.getChildMeshes().forEach(mesh => {
       mesh.id = mesh.name
+      mesh.isPickable = false
+      mesh.checkCollisions = false
     })
   
     this.disposeNotActiveProperties()
@@ -103,11 +103,9 @@ export default class Character {
       const properties = playerStore.properties
       
       if (!Helpers.IsName(mesh.name,'placeholder', true)) {
-        const propery = properties.find((property: Property) => {
+        return properties.find((property: Property) => {
           return Helpers.IsName(mesh.name, property.flavour, true)
         })
-        
-        return propery
       }
   
     return true
@@ -161,6 +159,6 @@ export default class Character {
       this.scene.onBeforeRenderObservable.remove(this.observer)
     }
     
-    this.meshRoot?.dispose()
+    this.scene.getMeshById('characterRoot_' + this.playerId)?.dispose()
   }
 }

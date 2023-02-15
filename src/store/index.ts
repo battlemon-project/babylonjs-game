@@ -10,7 +10,7 @@ const store: StoreOptions<RootState> = {
   strict: false,
   state: {
     player: {
-      id: '1'
+      id: ''
     },
     levels: [
       {id: 1, finish: false},
@@ -19,7 +19,7 @@ const store: StoreOptions<RootState> = {
     ],
   },
   mutations: {
-    ADD_SELF_PLAYER (state, playerId) {
+    SET_SELF_PLAYER_ID (state, playerId) {
       state.player.id = playerId
     },
   },

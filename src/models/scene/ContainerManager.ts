@@ -1,4 +1,5 @@
 import { AssetContainer, SceneLoader } from '@babylonjs/core'
+import { Helpers } from '@/models/Helpers'
 
 export interface Container {
   name: string;
@@ -7,6 +8,11 @@ export interface Container {
 
 export default class ContainerManager {
   static async getContainer (name: string, path: string) {
+    if (!Helpers.isFile(path + name)) {
+      console.info('Not found file: ' + path + name)
+      return null
+    }
+    
     const container = globalThis.assetContainers.find(container => container.name === name)
     
     if (container) {

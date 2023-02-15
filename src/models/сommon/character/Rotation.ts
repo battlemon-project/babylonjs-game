@@ -45,7 +45,12 @@ export default class Rotation {
   }
 
   private setAngle () {
-    const stateForward = store.getters.getPlayerById(this.playerId).move.forward
+    const state = store.getters.getPlayerById(this.playerId)
+    if (!state) {
+      return null
+    }
+    
+    const stateForward = state.move.forward
 
     if (!stateForward.isMoving) {
       return null
@@ -165,6 +170,8 @@ export default class Rotation {
   }
   
   dispose () {
+    this.subscribeStore?.unsubscribeAll()
+    
     if (this.syncIntervalId) {
       clearInterval(this.syncIntervalId)
     }

@@ -62,16 +62,5 @@ export default class Body {
     if (this.observer !== null) {
       scene.onBeforeRenderObservable.remove(this.observer)
     }
-    
-    const meshFoot = globalThis.scene.getMeshById(this.meshFootId)
-    const meshHead = globalThis.scene.getMeshById(this.meshHeadId)
-    
-    if (meshFoot) {
-      meshFoot.dispose()
-    }
-    
-    if (meshHead) {
-      meshHead.dispose()
-    }
   }
 }

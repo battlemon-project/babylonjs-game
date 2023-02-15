@@ -3,6 +3,7 @@ import Controller from '../playerSelf/Controller'
 import { Scene, AbstractMesh } from '@babylonjs/core'
 import Collisions from '@/models/mehanics/Collisions'
 import Character from '@/models/сommon/character/Character'
+import Camera from '@/models/playerSelf/Camera'
 
 export default class Player {
   scene: Scene
@@ -17,11 +18,11 @@ export default class Player {
     this.listCollisions = modelCollision.listCollisions
   
     new Body(this.playerId)
-    new Controller()
-  }
   
-  loadCharacter(callback: any) {
     const character = new Character(this.playerId)
-    character.load(callback)
+    character.load(() => {
+      new Controller()
+      new Camera()
+    })
   }
 }
