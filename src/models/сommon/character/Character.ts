@@ -54,7 +54,6 @@ export default class Character {
       this.setMeshes()
       this.setAnimations()
       this.setItems()
-      Character.setPrefabs()
       this.setShadow()
   
       callback()
@@ -124,12 +123,7 @@ export default class Character {
   
   private setItems()
   {
-      new Items(this.playerId)
-  }
-  
-  private static setPrefabs()
-  {
-    new Prefabs()
+    new Items(this.playerId)
   }
   
   private setAnimations () {
