@@ -1,4 +1,4 @@
-import { AbstractMesh, Angle, Animation, CubicEase, EasingFunction, Scene, Tools } from '@babylonjs/core'
+import { AbstractMesh, Animation, CubicEase, EasingFunction, Scene, Tools } from '@babylonjs/core'
 import SubscribeStore from '../SubscribeStore'
 import store from '@/store'
 
