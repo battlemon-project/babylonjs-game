@@ -35,18 +35,9 @@ export default class Items {
     const storePlayer = store.getters.getPlayerById(this.playerId) as Player
     
     storePlayer.items.forEach((item: Item) => {
-      let placeholder = this.placeholders.find(placeholder => {
+      const placeholder = this.placeholders.find(placeholder => {
         return Helpers.IsName(placeholder.id, item.type, true)
       })
-      
-      //TODO !!!!
-      if (item.type === 'fire_arms') {
-        placeholder = this.placeholders.find(placeholder => placeholder.id === 'placeholder_weapon_r_' + this.playerId)
-      }
-  
-      if (item.type === 'cold_arms') {
-        placeholder = this.placeholders.find(placeholder => placeholder.id === 'placeholder_scabbard_' + this.playerId)
-      }
       
       if (!placeholder) {
         return null
