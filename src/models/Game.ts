@@ -1,49 +1,80 @@
 import { Engine } from '@babylonjs/core'
 import Scene from './scene/Scene'
 import store from '@/store/index'
-import Camera from './playerSelf/Camera'
-import PlayerSelf from './playerSelf/Player'
-import LightPoints from './scene/LightPoints'
-import Doors from '@/models/mehanics/Doors'
-import LowerFloor from '@/models/mehanics/LowerFloor'
 import Audio from '@/models/sounds/Audio'
-import Teleport from '@/models/mehanics/Teleport'
 import ServerClient from './ServerClient'
-import Environment from '@/models/scene/Environment'
+import DevMode from '@/models/scene/DevMode'
+import PlayerSelf from '@/models/playerSelf/Player'
+import Player from '@/models/player/Player'
+import LightPoints from '@/models/scene/LightPoints'
 
 export default class Game {
+  players?: Array<Player>
+  
   init () {
+    globalThis.assetContainers = []
+    this.players = []
     const canvas = document.getElementById('canvas') as HTMLCanvasElement
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
-
-    const engine = new Engine(canvas, true, {preserveDrawingBuffer: false, stencil: true})
+    
+    const engine = new Engine(canvas, true, { preserveDrawingBuffer: false, stencil: true })
     const sceneModel = new Scene(engine)
-    const environment = new Environment()
-
-    sceneModel.load(() => {
+    const playerId = this.getPlayerId()
+    store.commit('SET_SELF_PLAYER_ID', playerId)
+    
+    sceneModel.load(async () => {
       new Audio()
-      environment.setupHDR()
-      environment.setupGlow()
-      environment.setupLightAndShadow()
+      sceneModel.setEnvironment()
       
-      const serverClient = new ServerClient()
-      serverClient.init(async (playerId: string) => {
-        store.commit('ADD_SELF_PLAYER', playerId)
-        await store.commit('ADD_PLAYER', { playerId, character: 'player.glb' })
-        
-        const playerSelf = new PlayerSelf(playerId)
-        
-        new Camera()
-        new Teleport(playerId)
-        new LightPoints()
-        new Doors()
-        new LowerFloor()
-        
-        playerSelf.loadCharacter( () => {
-          store.commit('LOADING_TOGGLE')
-        })
+      const serverClient = new ServerClient(playerId)
+      serverClient.init()
+      
+      store.subscribe(mutation => {
+        if (mutation.type === 'ADD_PLAYER') {
+          if (mutation.payload.id === playerId) {
+            new PlayerSelf(playerId)
+            
+            this.setClassesGame()
+            store.commit('LOADING_TOGGLE')
+            
+            console.info('Self player ' + playerId + ' created!')
+  
+            serverClient.syncPlayer()
+          } else {
+            this.players?.push(new Player(mutation.payload.id))
+            console.info('Player ' + playerId + ' created!')
+          }
+        }
       })
     })
+  
+    store.subscribe(mutation => {
+      if (mutation.type === 'REMOVE_PLAYER') {
+        const player = this.players?.find(player => player.playerId === mutation.payload)
+
+        if (player) {
+          player.dispose()
+          console.info('Player ' + player.playerId + ' removed')
+        }
+      }
+    })
+  }
+  
+  setClassesGame () {
+    new LightPoints()
+    new DevMode()
+  }
+  
+  getPlayerId () {
+    const queryString = window.location.search
+    const urlParams = new URLSearchParams(queryString)
+    const playerId = urlParams.get('playerId')
+    
+    if (!playerId) {
+      throw 'PlayerID is not specified in the URL'
+    }
+    
+    return playerId
   }
 }

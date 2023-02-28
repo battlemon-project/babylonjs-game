@@ -1,7 +1,6 @@
 import { MutationTree } from 'vuex'
 import { Player, Players } from '@/store/players/types'
 
-
 const getPlayerById = (state: Players, playerId: string) => {
   return state.list.find(player => player.id == playerId) as Player
 }
@@ -9,6 +8,8 @@ const getPlayerById = (state: Players, playerId: string) => {
 const playerExample: Player = {
   id: 'new',
   character: '',
+  items: [],
+  properties: [],
   move: {
     forward: {
       front: false,
@@ -31,13 +32,18 @@ const playerExample: Player = {
 
 export const mutations: MutationTree<Players> = {
   ADD_PLAYER (state, payload) {
-    if (!getPlayerById(state, payload.playerId)) {
+    if (!getPlayerById(state, payload.id)) {
       const newPlayer = JSON.parse(JSON.stringify(playerExample))
-      newPlayer.id = payload.playerId
-      newPlayer.character = payload.character
+      newPlayer.id = payload.id
+      newPlayer.character = 'BTLMN_Lemon.gltf'
+      newPlayer.items = payload.items
+      newPlayer.properties = payload.properties
   
       state.list.push(newPlayer)
     }
+  },
+  REMOVE_PLAYER (state, playerId) {
+    state.list.splice(state.list.findIndex(player => player.id == playerId), 1)
   },
   FLY_ENABLED (state, playerId) {
     getPlayerById(state, playerId).move.isFly = true
@@ -80,9 +86,6 @@ export const mutations: MutationTree<Players> = {
     if (statePlayer) {
       statePlayer.move = player.move
     }
-  },
-  DISPOSE_PLAYER (state, playerId) {
-    state.list.splice(state.list.findIndex(player => player.id == playerId), 1)
-  },
+  }
 }
 

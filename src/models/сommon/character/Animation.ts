@@ -18,10 +18,10 @@ export default class Animation {
   observableBeforeAnimation: any
   subscribeStore?: SubscribeStore | null
 
-  constructor (playerId: string, scene: Scene) {
+  constructor (playerId: string) {
     this.playerId = playerId
     this.store = store
-    this.scene = scene
+    this.scene = globalThis.scene
     this.animationGroups = []
     this.animationGroupCurrent = undefined
 
@@ -33,13 +33,12 @@ export default class Animation {
   }
 
   private setAnimationGroups () {
-    const idle = new Idle(this.playerId, this.scene)
+    const idle = new Idle(this.playerId)
     this.pushAnimation(idle)
-    this.pushAnimation(new Run(this.playerId, this.scene))
-    this.pushAnimation(new Sprint(this.playerId, this.scene))
-    this.pushAnimation(new JumpMiddle(this.playerId, this.scene))
-    this.pushAnimation(new JumpFinish(this.playerId, this.scene))
-    
+    this.pushAnimation(new Run(this.playerId))
+    this.pushAnimation(new Sprint(this.playerId))
+    this.pushAnimation(new JumpMiddle(this.playerId))
+    this.pushAnimation(new JumpFinish(this.playerId))
     
     if (idle.animation) {
       this.animationGroupCurrent = this.getAnimationByName('Idle_' + this.playerId)
@@ -64,7 +63,10 @@ export default class Animation {
   
     this.subscribeStore.move((move: Move) => {
       if (!move.isFly && !move.jump) {
-        this.blending(this.getAnimationByState())
+        const animation = this.getAnimationByState()
+        if (animation) {
+          this.blending(animation)
+        }
       }
     })
   
@@ -84,7 +86,10 @@ export default class Animation {
       const jumpFinishAnimation = animationJumpFinish.animation.targetedAnimations[0].animation
   
       const JumpFinishAnimationEvent = new AnimationEvent(25, () => {
-        this.blending(this.getAnimationByState())
+        const animation = this.getAnimationByState()
+        if (animation) {
+          this.blending(animation)
+        }
       })
   
       jumpFinishAnimation.addEvent(JumpFinishAnimationEvent)
@@ -93,6 +98,10 @@ export default class Animation {
   
   private getAnimationByState() {
     const statePlayer = store.getters.getPlayerById(this.playerId)
+    if (!statePlayer) {
+      return null
+    }
+    
     const move = statePlayer.move
     const animationIdle = this.getAnimationByName('Idle_' + this.playerId)
     const animationRun = this.getAnimationByName('Run_' + this.playerId)
@@ -146,7 +155,6 @@ export default class Animation {
   }
   
   dispose () {
-    this.subscribeStore?.unsubscribeAll()
     this.scene.onBeforeAnimationsObservable.removeCallback(this.observableBeforeAnimation)
   }
 }

@@ -8,12 +8,12 @@ export default class Sprint implements AnimationGroupInterface {
   autoPlayLoop: boolean
   scene: Scene
   
-  constructor (playerId: string, scene: Scene) {
+  constructor (playerId: string) {
     this.playerId = playerId
     this.weight = 0
     this.autoPlayLoop = true
-    this.scene = scene
-    this.animation = this.scene.getAnimationGroupByName('Sprint')
+    this.scene = globalThis.scene
+    this.animation = this.scene.getAnimationGroupByName('Sprint_' + playerId)
     
     this.setAnimations()
   }

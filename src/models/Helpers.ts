@@ -46,37 +46,24 @@ export const Helpers = {
     return false
   },
 
-  IsName (mesh: AbstractMesh, name: string, partly = false) {
-    if (mesh.id === name) {
+  IsName (text: string, find: string, partly = false) {
+    if (text === find) {
       return true
     }
 
     if (partly) {
-      const nameArray = mesh.id.split('_')
-      if (nameArray.length) {
-        if (nameArray[0] === name) {
-          return true
-        }
-      }
-    }
-
-
-    const nameArrayPoint = mesh.id.split('.')
-    if (nameArrayPoint.length) {
-      if (nameArrayPoint[0] === name) {
-        return true
-      }
+      return text.search(find) !== -1
     }
 
     return false
   },
 
   getMeshesByName (name: string, partly = false) {
-    return globalThis.scene.meshes.filter(mesh => Helpers.IsName(mesh, name, partly)) as Array<Mesh>
+    return globalThis.scene.meshes.filter(mesh => Helpers.IsName(mesh.name, name, partly)) as Array<Mesh>
   },
 
   getMeshByName (scene: Scene, name: string, partly = false) {
-    return scene.meshes.find(mesh => Helpers.IsName(mesh, name, partly)) as Mesh
+    return scene.meshes.find(mesh => Helpers.IsName(mesh.name, name, partly)) as Mesh
   },
 
   getTime () {
@@ -111,5 +98,18 @@ export const Helpers = {
     debugmat.diffuseColor = new Color3(0, 1, 0)
     debugmat.wireframe = true
     ellipsoid.material = debugmat
+  },
+  isFile(url: string) {
+    if (url) {
+      const split = url.split('/')
+      if (split) {
+        const pop = split.pop()
+        if (pop) {
+          return pop.indexOf('.') > 0
+        }
+      }
+    }
+    
+    return false
   }
 }

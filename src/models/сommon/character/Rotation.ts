@@ -13,11 +13,13 @@ export default class Rotation {
   animatable: any
   forwardAngle: number
   isAnimated: boolean
+  syncIntervalId: any
   
-  constructor (playerId: string, scene: Scene) {
-    this.scene = scene
+  constructor (playerId: string) {
+    this.scene = globalThis.scene
     this.playerId = playerId
     this.angle = 0
+    // TODO: вывести в константы признак meshId
     this.meshCharacter = this.scene.getMeshById('characterBody_' + this.playerId) as AbstractMesh
     this.meshFoot = this.scene.getMeshById('playerFoot_' + this.playerId) as AbstractMesh
     this.animation = undefined
@@ -27,10 +29,6 @@ export default class Rotation {
 
     this.setAnimation()
     this.subscribe()
-    
-    setInterval(() => {
-      this.setAngle()
-    }, 100)
   }
 
   private setAnimation () {
@@ -46,8 +44,13 @@ export default class Rotation {
     this.animation.setEasingFunction(easingFunction)
   }
 
-  private setAngle (animate = true) {
-    const stateForward = store.getters.getPlayerById(this.playerId).move.forward
+  private setAngle () {
+    const state = store.getters.getPlayerById(this.playerId)
+    if (!state) {
+      return null
+    }
+    
+    const stateForward = state.move.forward
 
     if (!stateForward.isMoving) {
       return null
@@ -146,13 +149,17 @@ export default class Rotation {
       const stateForward = store.getters.getPlayerById(this.playerId).move.forward
       
       if (stateForward.isMoving) {
-        this.setAngle(false)
+        this.setAngle()
       }
     })
   
     this.subscribeStore.forward(() => {
       this.setAngle()
     })
+  
+    this.syncIntervalId = setInterval(() => {
+      this.setAngle()
+    }, 100)
   }
   
   private stopAnimation()
@@ -164,5 +171,9 @@ export default class Rotation {
   
   dispose () {
     this.subscribeStore?.unsubscribeAll()
+    
+    if (this.syncIntervalId) {
+      clearInterval(this.syncIntervalId)
+    }
   }
 }

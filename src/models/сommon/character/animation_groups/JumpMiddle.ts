@@ -9,12 +9,12 @@ export default class JumpMiddle implements AnimationGroupInterface {
   scene: Scene
 
   //TODO: классы получились очень похожие, можно наследовать эти методы у общего класса
-  constructor (playerId: string, scene: Scene) {
+  constructor (playerId: string) {
     this.playerId = playerId
     this.weight = 0
     this.autoPlayLoop = true
-    this.scene = scene
-    this.animation = this.scene.getAnimationGroupByName('JumpMiddle')
+    this.scene = globalThis.scene
+    this.animation = this.scene.getAnimationGroupByName('JumpMiddle_' + playerId)
 
     this.setAnimations()
   }
