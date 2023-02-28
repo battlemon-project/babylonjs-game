@@ -3,7 +3,6 @@ import { Helpers } from '@/models/Helpers'
 import store from '@/store/index'
 import { Item, Player } from '@/store/players/types'
 import ContainerManager from '@/models/scene/ContainerManager'
-import placeholder from 'lodash/fp/placeholder'
 
 export default class Items {
   characterMeshes: AbstractMesh[]
@@ -50,7 +49,6 @@ export default class Items {
       }
       
       if (!placeholder) {
-        console.log(item.type, item.flavour)
         return null
       }
       

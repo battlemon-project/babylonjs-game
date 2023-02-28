@@ -34,6 +34,12 @@ export default class ServerClient {
       this.room.onMessage('syncPlayer', (message) => {
         store.commit('SYNC_PLAYER', message.player)
       })
+  
+      this.room.onMessage('errorIdPlayer', (message) => {
+        if (message === 500) {
+          alert('A player with this ID will not find!')
+        }
+      })
     })
   }
   

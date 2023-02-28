@@ -11,8 +11,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@babylonjs/inspector": "^5.18.0",
-    "@babylonjs/loaders": "^5.17.1",
+    "@babylonjs/inspector": "^5.46.0",
+    "@babylonjs/loaders": "^5.46.0",
     "@capacitor/android": "3.3.1",
     "@capacitor/app": "1.0.6",
     "@capacitor/core": "3.3.1",
@@ -43,7 +43,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@babylonjs/core": "^5.17.1",
+    "@babylonjs/core": "^5.46.0",
     "@capacitor/cli": "3.3.1",
     "@types/jest": "^24.0.19",
     "@typescript-eslint/eslint-plugin": "^2.33.0",

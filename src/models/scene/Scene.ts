@@ -10,6 +10,7 @@ import '@babylonjs/core/Debug/debugLayer'
 import '@babylonjs/inspector'
 import store from "@/store";
 import Environment from '@/models/scene/Environment'
+import Prefabs from '@/models/scene/Prefabs'
 
 export default class Scene {
     scene: BabylonScene
@@ -23,7 +24,7 @@ export default class Scene {
         globalThis.scene = this.scene
         this.store = store
         this.engine = engine
-        this.resourcesPath = 'resources/graphics/level_' + this.store.state.level.levelId + '/'
+        this.resourcesPath = '/resources/graphics/level_' + this.store.state.level.levelId + '/'
         this.filePath = 'map.babylon' + '?time=' + Date.now()
     }
 
@@ -43,6 +44,7 @@ export default class Scene {
         }
 
         this.optimize(scene)
+        new Prefabs()
         
         this.engine.runRenderLoop(() => {
           this.scene.render()

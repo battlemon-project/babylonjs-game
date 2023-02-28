@@ -6,6 +6,7 @@ import ContainerManager from '@/models/scene/ContainerManager'
 import { Helpers } from '@/models/Helpers'
 import { Property } from '@/store/players/types'
 import Items from '@/models/сommon/character/Items'
+import Prefabs from '@/models/scene/Prefabs'
 
 export default class Character {
   scene: Scene
@@ -122,7 +123,7 @@ export default class Character {
   
   private setItems()
   {
-      new Items(this.playerId)
+    new Items(this.playerId)
   }
   
   private setAnimations () {
