@@ -1,6 +1,7 @@
 import * as Colyseus from 'colyseus.js'
 import store from '@/store'
 import SubscribeStore from '@/models/сommon/SubscribeStore'
+import Game from '@/models/Game'
 
 export default class ServerClient {
   sessionId: string | null
@@ -34,7 +35,7 @@ export default class ServerClient {
       this.room.onMessage('syncPlayer', (message) => {
         store.commit('SYNC_PLAYER', message.player)
       })
-  
+      
       this.room.onMessage('errorIdPlayer', (message) => {
         if (message === 500) {
           alert('A player with this ID will not find!')

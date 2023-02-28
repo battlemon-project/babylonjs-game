@@ -7,6 +7,7 @@ import DevMode from '@/models/scene/DevMode'
 import PlayerSelf from '@/models/playerSelf/Player'
 import Player from '@/models/player/Player'
 import LightPoints from '@/models/scene/LightPoints'
+import { v4 as uuidv4 } from 'uuid'
 
 export default class Game {
   players?: Array<Player>
@@ -69,10 +70,10 @@ export default class Game {
   getPlayerId () {
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
-    const playerId = urlParams.get('playerId')
+    let playerId = urlParams.get('playerId')
     
     if (!playerId) {
-      throw 'PlayerID is not specified in the URL'
+      playerId = 'guest_' + uuidv4()
     }
     
     return playerId
