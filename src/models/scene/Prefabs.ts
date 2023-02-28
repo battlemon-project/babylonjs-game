@@ -30,12 +30,9 @@ export default class Prefabs {
       nameModel = 'BTLMN_Prop_' + nameModel + '.gltf'
       
       const path = '/resources/graphics/prefabs/'
-      
-      console.log(nameModel, path)
       const assetContainer = ContainerManager.getContainer(nameModel, path)
       
       if (!assetContainer) {
-        console.error('Container prefab not load :' + nameModel)
         return null
       }
       
@@ -56,7 +53,6 @@ export default class Prefabs {
         })
         
         if (prefab) {
-          console.log(prefab, rootMesh)
           rootMesh.parent = prefab
         }
       })
