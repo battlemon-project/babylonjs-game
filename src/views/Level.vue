@@ -64,8 +64,6 @@
   import { defineComponent } from 'vue'
   import Game from '../models/Game'
   import TopBar from '@/views/gui/topbar/TopBar.vue'
-  import BottomBar from '@/views/gui/topbar/BottomBar.vue'
-  import MapLevel from '@/views/gui/MapLevel.vue'
   import LevelPreview from '@/views/LevelPreview.vue'
   import MenuLevel from '@/views/gui/MenuLevel.vue'
   import Settings from '@/views/gui/Settings.vue'

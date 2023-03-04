@@ -1,0 +1,13 @@
+{
+  "presets": ["@babel/env", "@babel/preset-react"],
+  "plugins": [
+    [
+      "transform-react-jsx",
+      {
+        "pragma": "React.createElement",
+        "pragmaFrag": "React.Fragment",
+        "throwIfNamespace": false
+      }
+    ]
+  ]
+}
