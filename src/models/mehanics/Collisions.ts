@@ -7,20 +7,28 @@ export default class Collisions {
 
   constructor () {
     this.scene = globalThis.scene
+    this.listCollisions = []
+    this.listCollisionsFloor = []
+    
+    this.setCollisions()
+  }
+  
+  private setCollisions()
+  {
     this.listCollisions = this.scene.meshes.filter(mesh => mesh.checkCollisions)
     this.listCollisionsFloor = this.scene.getMeshesByTags('ground')
     
     this.listCollisions.forEach((mesh) => {
       mesh.isVisible = false
-      mesh.isPickable = true
+      mesh.isPickable = false
     })
-    
+  
     this.scene.getMeshesByTags('visible_force').forEach((mesh) => {
       mesh.isVisible = true
     })
   }
   
-  checkCollisionList(mesh: AbstractMesh, list: Array<AbstractMesh>)
+  private static checkCollisionList(mesh: AbstractMesh, list: Array<AbstractMesh>)
   {
     for (const keyMesh in list) {
       const listMesh = list[keyMesh]
@@ -34,6 +42,6 @@ export default class Collisions {
   }
   
   checkCollisionFloor(mesh: AbstractMesh) {
-    return this.checkCollisionList(mesh, this.listCollisionsFloor)
+    return Collisions.checkCollisionList(mesh, this.listCollisionsFloor)
   }
 }

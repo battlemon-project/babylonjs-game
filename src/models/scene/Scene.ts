@@ -42,9 +42,8 @@ export default class Scene {
         } catch (e) {
           console.error(e)
         }
-
+        
         this.optimize(scene)
-        new Prefabs()
         
         this.engine.runRenderLoop(() => {
           this.scene.render()

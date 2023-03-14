@@ -56,7 +56,6 @@ export default class Prefabs {
           rootMesh.parent = prefab
         }
       })
-      
     })
   }
 }

@@ -8,14 +8,10 @@ import Camera from '@/models/playerSelf/Camera'
 export default class Player {
   scene: Scene
   playerId: string
-  listCollisions: Array<AbstractMesh>
   
   constructor (playerId: string) {
     this.scene = globalThis.scene
     this.playerId = playerId
-    
-    const modelCollision = new Collisions()
-    this.listCollisions = modelCollision.listCollisions
   
     new Body(this.playerId)
   
