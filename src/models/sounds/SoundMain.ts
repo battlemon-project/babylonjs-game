@@ -5,7 +5,7 @@ export default class SoundMain {
   path: string
 
   constructor () {
-    this.path = 'resources/audio'
+    this.path = process.env.VUE_APP_RESOURCES_PATH + 'audio'
   }
 
   subscribe(store: Store<any>, sound: Sound, type: string) {

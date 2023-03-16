@@ -8,8 +8,10 @@ export interface Container {
 
 export default class ContainerManager {
   static async getContainer (name: string, path: string) {
-    if (!Helpers.isFile(path + name)) {
-      console.info('Not found file: ' + path + name)
+    const filePath = path + name
+    
+    if (!Helpers.isFile(filePath)) {
+      console.info('Not found file: ' + filePath)
       return null
     }
     
@@ -20,9 +22,11 @@ export default class ContainerManager {
       return container.container
     }
     
+    const timestampedPath = `${name}?timestamp=${Helpers.getTimestampByFile(filePath)}`
+    
     const newContainer = await SceneLoader.LoadAssetContainerAsync(
       path,
-      name,
+      timestampedPath,
       globalThis.scene)
     
     newContainer.removeAllFromScene()

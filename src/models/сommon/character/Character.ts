@@ -29,7 +29,7 @@ export default class Character {
   }
   
   load (callback: any) {
-    const path = '/resources/graphics/characters/'
+    const path = process.env.VUE_APP_RESOURCES_PATH + 'graphics/characters/'
     // TODO: взять из store название gltf
     const assetContainer = ContainerManager.getContainer('BTLMN_Lemon.gltf', path)
     

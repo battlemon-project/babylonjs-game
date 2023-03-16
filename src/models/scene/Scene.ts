@@ -10,13 +10,11 @@ import '@babylonjs/core/Debug/debugLayer'
 import '@babylonjs/inspector'
 import store from "@/store";
 import Environment from '@/models/scene/Environment'
-import Prefabs from '@/models/scene/Prefabs'
+import { Helpers } from '@/models/Helpers'
 
 export default class Scene {
     scene: BabylonScene
     engine: Engine
-    resourcesPath: string
-    filePath: string
     store: any
 
     constructor (engine: Engine) {
@@ -24,8 +22,6 @@ export default class Scene {
         globalThis.scene = this.scene
         this.store = store
         this.engine = engine
-        this.resourcesPath = '/resources/graphics/level_' + this.store.state.level.levelId + '/'
-        this.filePath = 'map.babylon' + '?time=' + Date.now()
     }
 
     load (callbackLoad: () => void) {
@@ -35,8 +31,13 @@ export default class Scene {
 
       SceneLoader.CleanBoneMatrixWeights = true
       SceneLoader.ShowLoadingScreen = false
+  
+      const fileName = 'map.babylon'
+      const levelResourcesPath = process.env.VUE_APP_RESOURCES_PATH + 'graphics/level_' + this.store.state.level.levelId + '/'
+      const timestamp = Helpers.getTimestampByFile(levelResourcesPath + '/' + fileName)
+      const timestampedFileName = `${fileName}?timestamp=${timestamp}`
 
-      SceneLoader.Append(this.resourcesPath, this.filePath, this.scene, (scene) => {
+      SceneLoader.Append(levelResourcesPath, timestampedFileName, this.scene, (scene) => {
         try {
           callbackLoad()
         } catch (e) {

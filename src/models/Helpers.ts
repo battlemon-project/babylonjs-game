@@ -111,5 +111,10 @@ export const Helpers = {
     }
     
     return false
+  },
+  getTimestampByFile(filePath: string)
+  {
+    const file = new File([""], filePath)
+    return new Date(file.lastModified).getTime()
   }
 }

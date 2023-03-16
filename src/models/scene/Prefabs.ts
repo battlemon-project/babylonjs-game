@@ -29,7 +29,7 @@ export default class Prefabs {
       nameModel = nameModel.replace(/\.[^/.]+$/, "")
       nameModel = 'BTLMN_Prop_' + nameModel + '.gltf'
       
-      const path = '/resources/graphics/prefabs/'
+      const path = process.env.VUE_APP_RESOURCES_PATH + 'graphics/prefabs/'
       const assetContainer = ContainerManager.getContainer(nameModel, path)
       
       if (!assetContainer) {
