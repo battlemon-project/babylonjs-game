@@ -9,7 +9,6 @@ import {
   RollingAverage, MeshBuilder, StandardMaterial, Color3,
 } from '@babylonjs/core'
 
-
 export const Helpers = {
   getRandomInt (min: number, max: number) {
     min = Math.ceil(min)
@@ -114,7 +113,7 @@ export const Helpers = {
   },
   getTimestampByFile(filePath: string)
   {
-    const file = new File([""], filePath)
-    return new Date(file.lastModified).getTime()
+    // TODO: сделать манифест для файлов в Laravel
+    return new Date().getTime()
   }
 }
