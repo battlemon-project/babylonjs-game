@@ -22,6 +22,8 @@ export default class ContainerManager {
       return container.container
     }
     
+
+    
     const timestampedPath = `${name}?timestamp=${Helpers.getTimestampByFile(filePath)}`
     
     const newContainer = await SceneLoader.LoadAssetContainerAsync(

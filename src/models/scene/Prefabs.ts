@@ -11,7 +11,9 @@ export default class Prefabs {
     this.prefabs = []
     
     this.setPrefabs()
-    this.setItems()
+    this.setItems().then(r => {
+      console.info('All prefabs loaded!')
+    })
   }
   
   private setPrefabs () {
@@ -23,39 +25,38 @@ export default class Prefabs {
     })
   }
   
-  private setItems () {
-    this.prefabs.forEach((prefab) => {
-      let nameModel = prefab.id.replace('Prefab_', '')
-      nameModel = nameModel.replace(/\.[^/.]+$/, "")
-      nameModel = 'BTLMN_Prop_' + nameModel + '.gltf'
+  private async setItems() {
+    for (const prefab of this.prefabs) {
+      const nameModel = `BTLMN_Prop_${prefab.id.replace('Prefab_', '')
+        .replace(/\.[^/.]+$/, '')}.gltf`
       
-      const path = process.env.VUE_APP_RESOURCES_PATH + 'graphics/prefabs/'
-      const assetContainer = ContainerManager.getContainer(nameModel, path)
+      const path = `${process.env.VUE_APP_RESOURCES_PATH}graphics/prefabs/`
       
-      if (!assetContainer) {
-        return null
-      }
-      
-      assetContainer.then((container) => {
+      try {
+        const container = await ContainerManager.getContainer(nameModel, path)
+        
         if (!container) {
-          return null
+          console.error(`Error loading container ${nameModel}:`)
+          continue
         }
         
         const resources = container.instantiateModelsToScene()
         const rootMesh = resources.rootNodes[0]
-        rootMesh.id = rootMesh.name
+        rootMesh.id = rootMesh.name;
         
         const meshes = rootMesh.getChildMeshes()
         
         meshes.forEach(mesh => {
-          mesh.id = mesh.name
+          mesh.id = mesh.name;
           mesh.isPickable = false
-        })
+        });
         
         if (prefab) {
           rootMesh.parent = prefab
         }
-      })
-    })
+      } catch (error) {
+        console.error(`Error loading container ${nameModel}:`, error)
+      }
+    }
   }
 }
