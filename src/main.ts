@@ -11,12 +11,6 @@ import '@ionic/vue/css/core.css';
 import './styles/app.sass'
 import './theme/variables.css';
 import store from '@/store/index'
-//import { AndroidFullScreen } from '@ionic-native/android-full-screen'
-import { ScreenOrientation } from '@ionic-native/screen-orientation'
-
-//AndroidFullScreen.leanMode()
-//AndroidFullScreen.immersiveMode()
-ScreenOrientation.lock(ScreenOrientation.ORIENTATIONS.LANDSCAPE)
 
 const app = createApp(App)
   .use(store)

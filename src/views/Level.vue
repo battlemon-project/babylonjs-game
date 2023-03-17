@@ -2,10 +2,7 @@
     <ion-page>
         <div id="level">
             <canvas id="canvas"></canvas>
-<!--            <controller v-if="!this.$store.state.level.loading" />-->
             <TopBar/>
-<!--            <BottomBar/>-->
-<!--            <MapLevel/>-->
             <MenuLevel/>
             <Settings/>
 
@@ -96,8 +93,6 @@
     },
     components: {
       TopBar,
-      // BottomBar,
-      // MapLevel,
       IonPage,
       LevelPreview,
       MenuLevel,
