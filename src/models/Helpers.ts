@@ -8,6 +8,7 @@ import {
   AbstractMesh,
   RollingAverage, MeshBuilder, StandardMaterial, Color3,
 } from '@babylonjs/core'
+import axios from 'axios'
 
 export const Helpers = {
   getRandomInt (min: number, max: number) {
@@ -111,9 +112,18 @@ export const Helpers = {
     
     return false
   },
-  getTimestampByFile(filePath: string)
+  async getFileTimestamp(filePath: string)
   {
-    // TODO: сделать манифест для файлов в Laravel
-    return new Date().getTime()
+    const arr = filePath.split("/") // [ "", "game", "resources", "graphics", "level_1", "map.babylon" ]
+    const filePathLastFolder = arr[arr.length - 2] + "/" + arr[arr.length - 1] // "level_1/map.babylon"
+    
+    try {
+      const response = await axios.get(process.env.VUE_APP_RESOURCES_PATH + 'graphics/manifest.json')
+      const manifest = response.data
+      return manifest[filePathLastFolder]
+    } catch (error) {
+      console.error('Ошибка получения manifest.json:', error)
+      return filePath
+    }
   }
 }

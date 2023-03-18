@@ -21,14 +21,13 @@ export default class ContainerManager {
       container.container.removeAllFromScene()
       return container.container
     }
+  
     
-
-    
-    const timestampedPath = `${name}?timestamp=${Helpers.getTimestampByFile(filePath)}`
+    const timestamp = await Helpers.getFileTimestamp(filePath)
     
     const newContainer = await SceneLoader.LoadAssetContainerAsync(
       path,
-      timestampedPath,
+      name + '?timestamp=' + timestamp,
       globalThis.scene)
     
     newContainer.removeAllFromScene()

@@ -24,32 +24,33 @@ export default class Scene {
         this.engine = engine
     }
 
-    load (callbackLoad: () => void) {
+    async load (callbackLoad: () => void) {
       window.addEventListener('resize', () => {
         this.engine.resize()
       })
-
+  
       SceneLoader.CleanBoneMatrixWeights = true
       SceneLoader.ShowLoadingScreen = false
   
       const fileName = 'map.babylon'
-      const levelResourcesPath = process.env.VUE_APP_RESOURCES_PATH + 'graphics/level_' + this.store.state.level.levelId + '/'
-      const timestamp = Helpers.getTimestampByFile(levelResourcesPath + '/' + fileName)
-      const timestampedFileName = `${fileName}?timestamp=${timestamp}`
-
-      SceneLoader.Append(levelResourcesPath, timestampedFileName, this.scene, (scene) => {
+      const filePath = process.env.VUE_APP_RESOURCES_PATH + 'graphics/level_' + this.store.state.level.levelId + '/'
+      
+      const timestamp = await Helpers.getFileTimestamp(filePath  + fileName)
+      const filePathWithTimestamp = fileName + '?timestamp=' + timestamp
+  
+      SceneLoader.Append(filePath, filePathWithTimestamp, this.scene, (scene) => {
         try {
           callbackLoad()
         } catch (e) {
           console.error(e)
         }
-        
+    
         this.optimize(scene)
-        
+    
         this.engine.runRenderLoop(() => {
           this.scene.render()
         })
-        
+    
       }, null, (scene, message, error) => {
         console.log(error, message)
       })
