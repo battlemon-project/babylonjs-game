@@ -1,4 +1,4 @@
-import { AbstractMesh, Mesh, Scene } from '@babylonjs/core'
+import { Mesh, Scene } from '@babylonjs/core'
 import { Store } from 'vuex'
 
 export default class Finish {
