@@ -1,15 +1,14 @@
 import { AbstractMesh, Color4, Mesh, Ray, RayHelper, Scene, Vector3 } from '@babylonjs/core'
 import { AdvancedDynamicTexture, Rectangle, TextBlock } from '@babylonjs/gui/2D'
-import { Store } from 'vuex'
+import store from '@/store/index'
 
 interface Item {
   id: string;
   mesh: AbstractMesh;
   isFocused: boolean;
-  gameObjectId: string;
 }
 
-export default class Inventory {
+export default class EventPoints {
   items: Array<Item>
   scene: Scene
   store: any
@@ -20,10 +19,10 @@ export default class Inventory {
   rays: Array<Ray>
   rectLabel: Rectangle
   
-  constructor (playerId: string) {
+  constructor () {
     this.scene = globalThis.scene
-    this.store = Store
-    this.playerId = playerId
+    this.store = store
+    this.playerId = this.store.state.player.id
     this.meshHead = this.scene.getMeshById('playerHead_' + this.playerId) as Mesh
     this.meshFoot = this.scene.getMeshById('playerFoot_' + this.playerId) as Mesh
     this.showRay = false
@@ -37,27 +36,25 @@ export default class Inventory {
   }
   
   private initItems () {
-    this.store.getState().inventory.contents.forEach(item => {
-      const mesh = this.scene.getMeshById(item.mesh_id) as Mesh
-      
+    
+    this.scene.getMeshesByTags('event_point').forEach((mesh: Mesh) => {
       if (mesh) {
+        console.log(mesh)
         mesh.isPickable = true
         mesh.edgesWidth = 4.0
         mesh.edgesColor = new Color4(255, 255, 255, 1)
-        mesh.isVisible = !item.lifted
+        mesh.isVisible = true
         
         this.items.push({
           id: mesh.id,
           mesh,
-          isFocused: false,
-          gameObjectId: item.game_object_id
+          isFocused: false
         })
       }
     })
   }
   
   private buildRays () {
-    const mesh = this.meshHead
     const cellSize = 0.15
     const areaSize = 0.8
     const countCells = Math.round((areaSize * areaSize) / (cellSize * cellSize))
@@ -73,7 +70,7 @@ export default class Inventory {
       const length = 2
       const ray = new Ray(Vector3.Zero(), Vector3.Zero())
       const rayHelper = new RayHelper(ray)
-      rayHelper.attachToMesh(mesh, new Vector3(rayX, rayY, length), Vector3.Zero(), length)
+      rayHelper.attachToMesh(this.meshHead, new Vector3(rayX, rayY, length), Vector3.Zero(), length)
       
       if (this.showRay) {
         rayHelper.show(this.scene)
