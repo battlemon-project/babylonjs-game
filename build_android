@@ -1,2 +1,0 @@
-#!/bin/bash
-ionic capacitor build android

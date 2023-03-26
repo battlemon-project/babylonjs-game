@@ -5,14 +5,11 @@
                     <div class="title margin_bottom">Settings</div>
 
                     <div class="list">
-                        <ion-list>
-                            <ion-item lines="full" v-for="(field, index) in this.fields" :key="index">
-                                <ion-label>{{ field.name }}</ion-label>
-                                <ion-checkbox slot="end" @update:modelValue="(value) => { saveField(field.name, value) }"
+                            <div v-for="(field, index) in this.fields" :key="index">
+                                <label>{{ field.name }}</label>
+                                <input type="checkbox" @update:modelValue="(value) => { saveField(field.name, value) }"
                                               :modelValue="field.value">
-                                </ion-checkbox>
-                            </ion-item>
-                        </ion-list>
+                            </div>
                     </div>
 
                     <div class="button_bar">
@@ -25,18 +22,11 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue'
-  import { IonCheckbox, IonLabel, IonList, IonItem } from '@ionic/vue'
 
   export default defineComponent({
-    name: 'Home',
-    components: {
-      IonCheckbox,
-      IonLabel,
-      IonList,
-      IonItem,
-    },
+    name: 'game-home',
     computed: {
-      fields() {
+      fields(): any {
         return this.$store.getters.settingFields
       }
     },

@@ -1,7 +1,6 @@
 import Body from '../сommon/Body'
 import Controller from '../playerSelf/Controller'
-import { Scene, AbstractMesh } from '@babylonjs/core'
-import Collisions from '@/models/mehanics/Collisions'
+import { Scene } from '@babylonjs/core'
 import Character from '@/models/сommon/character/Character'
 import Camera from '@/models/playerSelf/Camera'
 

@@ -1,7 +1,6 @@
 import * as Colyseus from 'colyseus.js'
 import store from '@/store'
 import SubscribeStore from '@/models/сommon/SubscribeStore'
-import Game from '@/models/Game'
 
 export default class ServerClient {
   sessionId: string | null

@@ -11,7 +11,7 @@ export default class Prefabs {
     this.prefabs = []
     
     this.setPrefabs()
-    this.setItems().then(r => {
+    this.setItems().then(() => {
       console.info('All prefabs loaded!')
     })
   }
