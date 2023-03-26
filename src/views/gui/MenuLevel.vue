@@ -4,14 +4,14 @@
             <div class="content">
                 <div class="title margin_bottom">Menu</div>
 
-                <div>
-                    <div>
+                <ul class="list">
+                    <li>
                         <a @click="openSettings">Settings</a>
-                    </div>
-                    <div>
+                    </li>
+                    <li>
                         <a href="/home">Exit</a>
-                    </div>
-                </div>
+                    </li>
+                </ul>
 
                 <div class="button_bar">
                     <a @click="closeMenu" class="button">Close</a>

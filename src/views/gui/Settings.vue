@@ -4,13 +4,14 @@
                 <div class="content">
                     <div class="title margin_bottom">Settings</div>
 
-                    <div class="list">
-                            <div v-for="(field, index) in this.fields" :key="index">
-                                <label>{{ field.name }}</label>
-                                <input type="checkbox" @update:modelValue="(value) => { saveField(field.name, value) }"
-                                              :modelValue="field.value">
-                            </div>
-                    </div>
+                    <ul class="list">
+                            <li v-for="(field, index) in this.fields" :key="index">
+                                <label>
+                                <input type="checkbox" @change="saveField(field.name, $event)"
+                                              :checked="field.value"> {{ field.name }}
+                                </label>
+                            </li>
+                    </ul>
 
                     <div class="button_bar">
                         <a @click="close" class="button">Close</a>
@@ -31,8 +32,12 @@
       }
     },
     methods: {
-      saveField (name: string, value: boolean) {
-        this.$store.commit('SET_SETTING_FIELD_VALUE', {name, value})
+      saveField (name: string, event: any) {
+        this.$nextTick(() => {
+          this.$store.commit('SET_SETTING_FIELD_VALUE', {name, value: event.target.checked})
+        })
+
+
       },
       close () {
         this.$store.commit('SET_SETTINGS_OPEN', false)
