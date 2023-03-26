@@ -6,9 +6,10 @@ import ServerClient from './ServerClient'
 import DevMode from '@/models/scene/DevMode'
 import PlayerSelf from '@/models/playerSelf/Player'
 import Player from '@/models/player/Player'
-import LightPoints from '@/models/scene/LightPoints'
 import { v4 as uuidv4 } from 'uuid'
 import Prefabs from '@/models/scene/Prefabs'
+import LODs from '@/models/mehanics/LODs'
+import EventPoints from '@/models/mehanics/EventPoints'
 
 export default class Game {
   players?: Array<Player>
@@ -65,9 +66,11 @@ export default class Game {
   }
   
   setClassesGame () {
-    new LightPoints()
+   // new LightPoints()
     new DevMode()
     new Prefabs()
+    new LODs()
+    new EventPoints()
   }
   
   getPlayerId () {

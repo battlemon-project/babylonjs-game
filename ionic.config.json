@@ -1,7 +1,0 @@
-{
-  "name": "maze",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue"
-}

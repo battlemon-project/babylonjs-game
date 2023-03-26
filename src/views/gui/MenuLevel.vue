@@ -4,14 +4,14 @@
             <div class="content">
                 <div class="title margin_bottom">Menu</div>
 
-                <ion-list>
-                    <ion-item>
+                <ul class="list">
+                    <li>
                         <a @click="openSettings">Settings</a>
-                    </ion-item>
-                    <ion-item>
+                    </li>
+                    <li>
                         <a href="/home">Exit</a>
-                    </ion-item>
-                </ion-list>
+                    </li>
+                </ul>
 
                 <div class="button_bar">
                     <a @click="closeMenu" class="button">Close</a>
@@ -23,10 +23,8 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue'
-  import { IonList, IonItem } from '@ionic/vue'
 
   export default defineComponent({
-    components: { IonList, IonItem },
     methods: {
       closeMenu() {
         this.$store.commit('SET_OPEN_MENU', false)
