@@ -1,42 +1,42 @@
-import { AssetContainer, SceneLoader } from '@babylonjs/core'
+import { AbstractMesh, SceneLoader } from '@babylonjs/core'
 import { Helpers } from '@/models/Helpers'
+import { GLTFLoader } from '@babylonjs/loaders/glTF/2.0'
+import TagsExtension from './TagsExtansion'
 
 export interface Container {
   name: string;
-  container: AssetContainer;
+  meshes: AbstractMesh[];
 }
 
 export default class ContainerManager {
-  static async getContainer (name: string, path: string) {
-    const filePath = path + name
+  static async getContainer(name: string, path: string): Promise<null | { name: string; meshes: (AbstractMesh | null)[] }> {
+    const filePath = path + name;
     
     if (!Helpers.isFile(filePath)) {
-      console.info('Not found file: ' + filePath)
-      return null
+      console.info('Not found file: ' + filePath);
+      return null;
     }
     
-    const container = globalThis.assetContainers.find(container => container.name === name)
+    const container = globalThis.assetContainers.find(container => container.name === name);
     
     if (container) {
-      container.container.removeAllFromScene()
-      return container.container
+      const meshes = container.meshes.map(mesh => mesh.clone(`instance_${mesh.name}`, null, false));
+      return { name: name, meshes: meshes };
     }
+    
+    const timestamp = await Helpers.getFileTimestamp(filePath);
   
+    const result = await SceneLoader.ImportMeshAsync('', path, name + '?timestamp=' + timestamp, globalThis.scene);
+  
+    globalThis.scene.getMeshesByTags('lod')
     
-    const timestamp = await Helpers.getFileTimestamp(filePath)
-    
-    const newContainer = await SceneLoader.LoadAssetContainerAsync(
-      path,
-      name + '?timestamp=' + timestamp,
-      globalThis.scene)
-    
-    newContainer.removeAllFromScene()
+    const instanceMeshes = result.meshes.map(mesh => mesh.clone(`instance_${mesh.name}`, null, false));
     
     globalThis.assetContainers.push({
       name: name,
-      container: newContainer
-    })
+      meshes: result.meshes
+    });
     
-    return newContainer
+    return { name: name, meshes: instanceMeshes };
   }
 }

@@ -38,7 +38,7 @@ export default class Character {
         throw 'Not found container ' + path + 'BTLMN_Lemon.gltf'
       }
       
-      container.instantiateModelsToScene((sourceName) => {
+      /*container.instantiateModelsToScene((sourceName) => {
         if (sourceName == 'Body') {
           return this.meshBodyId
         }
@@ -48,7 +48,7 @@ export default class Character {
         }
         
         return sourceName + '_' + this.playerId
-      })
+      })*/
       
       this.setMeshes()
       this.setAnimations()

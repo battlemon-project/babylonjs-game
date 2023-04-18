@@ -6,13 +6,14 @@ export default class Prefabs {
   prefabs: AbstractMesh[]
   scene: Scene
   
-  constructor () {
+  constructor (callback: any) {
     this.scene = globalThis.scene
     this.prefabs = []
     
     this.setPrefabs()
     this.setItems().then(() => {
       console.info('All prefabs loaded!')
+      callback()
     })
   }
   
@@ -40,7 +41,7 @@ export default class Prefabs {
           continue
         }
         
-        const resources = container.instantiateModelsToScene()
+       /* const resources = container.instantiateModelsToScene()
         const rootMesh = resources.rootNodes[0]
         rootMesh.id = rootMesh.name;
         
@@ -53,7 +54,7 @@ export default class Prefabs {
         
         if (prefab) {
           rootMesh.parent = prefab
-        }
+        }*/
       } catch (error) {
         console.error(`Error loading container ${nameModel}:`, error)
       }
