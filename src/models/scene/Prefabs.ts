@@ -18,11 +18,11 @@ export default class Prefabs {
   }
   
   private setPrefabs () {
-    this.scene.meshes.forEach(mesh => {
-      if (Helpers.IsName(mesh.id, 'Prefab_', true)) {
-        mesh.isVisible = false
-        this.prefabs.push(mesh)
-      }
+    const meshes = this.scene.getMeshesByTags('prefab')
+  
+    meshes.forEach(mesh => {
+      mesh.isVisible = false
+      this.prefabs.push(mesh)
     })
   }
   
@@ -41,20 +41,12 @@ export default class Prefabs {
           continue
         }
         
-       /* const resources = container.instantiateModelsToScene()
-        const rootMesh = resources.rootNodes[0]
-        rootMesh.id = rootMesh.name;
-        
-        const meshes = rootMesh.getChildMeshes()
-        
-        meshes.forEach(mesh => {
-          mesh.id = mesh.name;
-          mesh.isPickable = false
-        });
+        const rootMesh = container.meshes[0] as AbstractMesh
         
         if (prefab) {
           rootMesh.parent = prefab
-        }*/
+        }
+        
       } catch (error) {
         console.error(`Error loading container ${nameModel}:`, error)
       }

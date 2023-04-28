@@ -6,6 +6,7 @@ import ContainerManager from '@/models/scene/ContainerManager'
 import { Helpers } from '@/models/Helpers'
 import { Property } from '@/store/players/types'
 import Items from '@/models/сommon/character/Items'
+import { forEach } from 'lodash'
 
 export default class Character {
   scene: Scene
@@ -37,18 +38,28 @@ export default class Character {
       if (!container) {
         throw 'Not found container ' + path + 'BTLMN_Lemon.gltf'
       }
-      
-      /*container.instantiateModelsToScene((sourceName) => {
-        if (sourceName == 'Body') {
-          return this.meshBodyId
-        }
   
-        if (sourceName == '__root__') {
-          return this.meshRootId
+      container.meshes.forEach((mesh) => {
+        if (mesh) {
+          console.log(mesh.id)
+          if (mesh.id == 'instance.__root__') {
+            mesh.id = this.meshRootId
+            return
+          }
+          
+          if (mesh.id == 'instance.Body') {
+            mesh.id = this.meshBodyId
+            return
+          }
+  
+          mesh.id = mesh.id + '_' + this.playerId
+          mesh.name = mesh.name + '_' + this.playerId
         }
-        
-        return sourceName + '_' + this.playerId
-      })*/
+      })
+      
+      this.scene.meshes.forEach(mesh => {
+        console.log(mesh.id)
+      })
       
       this.setMeshes()
       this.setAnimations()
@@ -64,6 +75,7 @@ export default class Character {
   }
   
   setMeshes() {
+    //console.log(this.meshBodyId)
     const meshBody = this.scene.getMeshByName(this.meshBodyId)
     const meshRoot = this.scene.getMeshByName(this.meshRootId)
   
