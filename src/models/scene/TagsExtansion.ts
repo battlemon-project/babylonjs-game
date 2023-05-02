@@ -3,7 +3,7 @@ import { GLTFLoader } from '@babylonjs/loaders/glTF/2.0'
 import { Tags, TransformNode } from '@babylonjs/core'
 
 class TagsExtension implements IGLTFLoaderExtension {
-  public readonly name = "MyTagsExtension"
+  public readonly name = 'MyTagsExtension'
   public enabled = true
   
   constructor(private _loader: GLTFLoader) {}
@@ -11,15 +11,16 @@ class TagsExtension implements IGLTFLoaderExtension {
   public loadNodeAsync(context: string, node: any, assign: (babylonTransformNode: any) => void): Promise<TransformNode> {
     return this._loader.loadNodeAsync(context, node,  (babylonTransformNode) => {
       if (this._loader.gltf.meshes) {
-        const mesh = this._loader.gltf.meshes[node.mesh];
+        const mesh = this._loader.gltf.meshes[node.mesh]
         
-        if (mesh && mesh.extras && mesh.extras.tags) {
-          console.log(mesh.extras.tags)
-          Tags.AddTagsTo(babylonTransformNode, mesh.extras.tags);
+        if (mesh && mesh.extras) {
+          if (mesh.extras.tags) {
+            Tags.AddTagsTo(babylonTransformNode, mesh.extras.tags)
+          }
         }
       }
 
-      assign(babylonTransformNode);
+      assign(babylonTransformNode)
     });
   }
   
@@ -29,7 +30,7 @@ class TagsExtension implements IGLTFLoaderExtension {
 }
 
 export default function RegisterTagsExtension () {
-  GLTFLoader.RegisterExtension("MyTagsExtension", (loader: GLTFLoader) => {
-    return new TagsExtension(loader);
+  GLTFLoader.RegisterExtension('MyTagsExtension', (loader: GLTFLoader) => {
+    return new TagsExtension(loader)
   })
 }

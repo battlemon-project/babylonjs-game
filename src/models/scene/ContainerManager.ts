@@ -1,42 +1,58 @@
-import { AbstractMesh, SceneLoader } from '@babylonjs/core'
+import { AssetContainer, InstantiatedEntries, Mesh, SceneLoader, Tags } from '@babylonjs/core'
 import { Helpers } from '@/models/Helpers'
 
 export interface Container {
   name: string;
-  meshes: AbstractMesh[];
+  // TODO: указать тип
+  data: AssetContainer
 }
 
 export default class ContainerManager {
-  static async getContainer(name: string, path: string): Promise<null | { name: string; meshes: (AbstractMesh | null)[] }> {
+  static async getContainer(name: string, path: string): Promise<InstantiatedEntries | null> {
     const filePath = path + name;
     
     if (!Helpers.isFile(filePath)) {
-      console.info('Not found file: ' + filePath);
-      return null;
+      console.info('Not found file: ' + filePath)
+      return null
     }
     
-    const container = globalThis.assetContainers.find(container => container.name === name);
+    const container = globalThis.assetContainers.find((container: Container) => container.name === name)
     
     if (container) {
-      const meshes = container.meshes.map(mesh => mesh.clone(`instance_${mesh.name}`, null, false));
-      return { name: name, meshes: meshes };
+      return this.getInstance(container.data)
     }
     
-    const timestamp = await Helpers.getFileTimestamp(filePath);
+    const timestamp = await Helpers.getFileTimestamp(filePath)
   
-    const result = await SceneLoader.ImportMeshAsync('', path, name + '?timestamp=' + timestamp, globalThis.scene)
+    const loadedContainer = await SceneLoader.LoadAssetContainerAsync(  path, name + '?timestamp=' + timestamp, globalThis.scene)
     
-    const instanceMeshes = result.meshes.map(mesh => mesh.clone(`instance`, null, false))
+    if (loadedContainer) {
+      loadedContainer.removeAllFromScene()
+      
+      const newContainer = { name, data: loadedContainer }
+      globalThis.assetContainers.push(newContainer)
+      
+      return this.getInstance(newContainer.data)
+    }
+
+    return null
+  }
   
-    result.meshes.forEach(mesh => {
-      mesh.dispose()
+  static getInstance(assetContainer: AssetContainer)
+  {
+    const result = assetContainer.instantiateModelsToScene((name) => {
+      return name
+    }, false, { doNotInstantiate: false })
+    
+    result.rootNodes[0].getChildMeshes().forEach(mesh => {
+      const assetMesh = assetContainer.meshes.find(assetMesh => assetMesh.name === mesh.name) as Mesh
+      
+      if (assetMesh) {
+        const tags = Tags.GetTags(assetMesh)
+        Tags.AddTagsTo(mesh, tags)
+      }
     })
     
-    globalThis.assetContainers.push({
-      name: name,
-      meshes: result.meshes
-    });
-    
-    return { name: name, meshes: instanceMeshes };
+    return result
   }
 }

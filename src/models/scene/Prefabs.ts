@@ -1,5 +1,4 @@
 import { AbstractMesh, Scene } from '@babylonjs/core'
-import { Helpers } from '@/models/Helpers'
 import ContainerManager from '@/models/scene/ContainerManager'
 
 export default class Prefabs {
@@ -41,7 +40,7 @@ export default class Prefabs {
           continue
         }
         
-        const rootMesh = container.meshes[0] as AbstractMesh
+        const rootMesh = container.rootNodes[0]
         
         if (prefab) {
           rootMesh.parent = prefab

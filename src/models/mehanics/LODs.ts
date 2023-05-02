@@ -1,8 +1,9 @@
-import { Mesh } from '@babylonjs/core'
+import { Mesh, Tags } from '@babylonjs/core'
+import { sortBy } from 'lodash'
 
 interface LOD {
-  name: string;
-  numbers: Array<string>;
+  mesh: Mesh;
+  distance: number;
 }
 
 export default class LODs {
@@ -15,42 +16,29 @@ export default class LODs {
     const LODs = [] as Array<LOD>
       
     meshes.forEach(mesh => {
-      const splitName = mesh.id.split('.')
-      const name = splitName[0]
-      const number = splitName[splitName.length -1]
+      const tags = Tags.GetTags(mesh).split(' ')
+      const tagDistance = tags.find(tag => tag.indexOf('distance') !== -1)
+      let distance = 0
       
-      const oldLod = LODs.find((lod: LOD) => lod.name === name)
-      
-      if (oldLod) {
-        oldLod.numbers.push(number)
-      } else {
-        LODs.push({
-          name,
-          numbers: [number]
-        })
+      if (tagDistance) {
+        distance = Number(tagDistance.split('_')[1])
       }
+  
+      LODs.push({
+        mesh: mesh,
+        distance: distance
+      })
     })
     
-    LODs.forEach((LOD: LOD) => {
-      LOD.numbers.sort((a, b) => {
-        return Number(a) - Number(b)
+    const mainLOD = LODs.find(LOD => !LOD.distance)
+    
+    if (mainLOD) {
+      sortBy(LODs, 'distance').forEach(LOD => {
+        if (LOD.distance) {
+          console.log(mainLOD.mesh)
+          mainLOD.mesh.addLODLevel(LOD.distance, LOD.mesh)
+        }
       })
-      
-      const mainLOD = scene.getMeshById(LOD.name + '.' + LOD.numbers[0]) as Mesh
-  
-      if (mainLOD) {
-        LOD.numbers.forEach((number, index) => {
-          if (index !== 0) {
-            const mesh = scene.getMeshById(LOD.name + '.' + number) as Mesh
-            
-            if (mesh) {
-              mainLOD.addLODLevel(Number(number), mesh)
-            }
-          }
-        })
-  
-        mainLOD.addLODLevel(500, null)
-      }
-    })
+    }
   }
 }
