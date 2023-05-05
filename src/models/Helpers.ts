@@ -120,7 +120,7 @@ export const Helpers = {
     try {
       const response = await axios.get(process.env.VUE_APP_RESOURCES_PATH + 'graphics/manifest.json')
       const manifest = response.data
-      return manifest[filePathLastFolder]
+      return manifest[filePathLastFolder] ?? new Date().getTime()
     } catch (error) {
       console.error('Ошибка получения manifest.json:', error)
       return filePath

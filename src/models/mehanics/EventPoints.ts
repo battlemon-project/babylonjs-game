@@ -39,7 +39,6 @@ export default class EventPoints {
     
     this.scene.getMeshesByTags('event_point').forEach((mesh: Mesh) => {
       if (mesh) {
-        console.log(mesh)
         mesh.isPickable = true
         mesh.edgesWidth = 4.0
         mesh.edgesColor = new Color4(255, 255, 255, 1)

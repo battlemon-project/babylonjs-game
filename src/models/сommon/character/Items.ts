@@ -53,7 +53,7 @@ export default class Items {
       
       const rootId = '__root__item_' + item.flavour + '_' + this.playerId
       
-      assetContainer.then((container) => {
+     /* assetContainer.then((container) => {
         if (!container) {
           return null
         }
@@ -80,7 +80,7 @@ export default class Items {
         if (placeholder) {
           rootMesh.parent = placeholder
         }
-      })
+      })*/
       
     })
   }

@@ -38,16 +38,22 @@ export default class Character {
         throw 'Not found container ' + path + 'BTLMN_Lemon.gltf'
       }
       
-      container.instantiateModelsToScene((sourceName) => {
-        if (sourceName == 'Body') {
-          return this.meshBodyId
-        }
+      const rootMesh = container.rootNodes[0]
+      rootMesh.id = this.meshRootId
   
-        if (sourceName == '__root__') {
-          return this.meshRootId
-        }
-        
-        return sourceName + '_' + this.playerId
+      container.rootNodes[0].getChildMeshes().forEach((mesh) => {
+          if (mesh.name == 'Body') {
+            mesh.id = this.meshBodyId
+            mesh.name = this.meshBodyId
+            return
+          }
+  
+          mesh.id = mesh.id + '_' + this.playerId
+          mesh.name = mesh.name + '_' + this.playerId
+      })
+      
+      container.animationGroups.forEach((animationGroup) => {
+        animationGroup.name = animationGroup.name + '_' + this.playerId
       })
       
       this.setMeshes()
@@ -64,8 +70,8 @@ export default class Character {
   }
   
   setMeshes() {
-    const meshBody = this.scene.getMeshByName(this.meshBodyId)
-    const meshRoot = this.scene.getMeshByName(this.meshRootId)
+    const meshBody = this.scene.getMeshById(this.meshBodyId)
+    const meshRoot = this.scene.getMeshById(this.meshRootId)
   
     if (!meshBody) {
       throw 'Not found mesh Player Body'

@@ -1,56 +1,60 @@
-import { Mesh } from '@babylonjs/core'
+import { Mesh, Tags } from '@babylonjs/core'
+import { sortBy } from 'lodash'
 
 interface LOD {
-  name: string;
-  numbers: Array<string>;
+  mesh: any;
+  distance: number;
 }
 
 export default class LODs {
-  constructor () {
-    this.init()
+  constructor (meshes: Array<any>) {
+    this.init(meshes)
   }
   
-  init() {
-    const meshes = globalThis.scene.getMeshesByTags('lod')
+  init(meshes: Array<any>) {
     const LODs = [] as Array<LOD>
-      
+    
     meshes.forEach(mesh => {
-      const splitName = mesh.id.split('.')
-      const name = splitName[0]
-      const number = splitName[splitName.length -1]
-      
-      const oldLod = LODs.find((lod: LOD) => lod.name === name)
-      
-      if (oldLod) {
-        oldLod.numbers.push(number)
-      } else {
-        LODs.push({
-          name,
-          numbers: [number]
-        })
+      const rawTags = Tags.GetTags(mesh)
+      if (!rawTags || !rawTags.length) {
+        return
       }
+      
+      const tags = rawTags.split(' ')
+      if (!tags.find((tag: string) => tag === 'lod')) {
+        return
+      }
+      
+      const tagDistance = tags.find((tag: string) => tag.indexOf('distance') !== -1)
+      let distance = 0
+      
+      if (tagDistance) {
+        distance = Number(tagDistance.split('_')[1])
+      }
+      
+      LODs.push({
+        mesh: mesh,
+        distance: distance
+      })
     })
     
-    LODs.forEach((LOD: LOD) => {
-      LOD.numbers.sort((a, b) => {
-        return Number(a) - Number(b)
-      })
+    if (LODs.length) {
+      const orderedLODs = sortBy(LODs, 'distance').reverse()
+      const mainLod = orderedLODs[0]
+      const mainLODMesh = mainLod.mesh as Mesh
       
-      const mainLOD = scene.getMeshById(LOD.name + '.' + LOD.numbers[0]) as Mesh
-  
-      if (mainLOD) {
-        LOD.numbers.forEach((number, index) => {
-          if (index !== 0) {
-            const mesh = scene.getMeshById(LOD.name + '.' + number) as Mesh
-            
-            if (mesh) {
-              mainLOD.addLODLevel(Number(number), mesh)
-            }
-          }
-        })
-  
-        mainLOD.addLODLevel(500, null)
+      mainLODMesh.setEnabled(false)
+      mainLODMesh.useLODScreenCoverage = false
+      
+      for (let i = 1; i < orderedLODs.length; i++) {
+        const LOD = orderedLODs[i]
+        mainLODMesh.addLODLevel(LOD.distance, LOD.mesh)
       }
-    })
+  
+      mainLod.mesh.addLODLevel(mainLod.mesh.distance, null)
+    }
+    
+    console.log(LODs)
   }
+
 }

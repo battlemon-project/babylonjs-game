@@ -12,4 +12,5 @@ declare module '*.glb'
 declare global {
   var scene: Scene;
   var assetContainers: Array<Container>;
+  var assetOriginContainers: Array<Container>;
 }
