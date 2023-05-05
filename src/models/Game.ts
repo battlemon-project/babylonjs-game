@@ -72,7 +72,6 @@ export default class Game {
     
     new DevMode()
     new Prefabs(() => {
-      new LODs()
       new EventPoints()
     })
   }

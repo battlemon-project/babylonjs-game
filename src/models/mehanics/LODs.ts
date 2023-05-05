@@ -2,43 +2,59 @@ import { Mesh, Tags } from '@babylonjs/core'
 import { sortBy } from 'lodash'
 
 interface LOD {
-  mesh: Mesh;
+  mesh: any;
   distance: number;
 }
 
 export default class LODs {
-  constructor () {
-    this.init()
+  constructor (meshes: Array<any>) {
+    this.init(meshes)
   }
   
-  init() {
-    const meshes = globalThis.scene.getMeshesByTags('lod')
+  init(meshes: Array<any>) {
     const LODs = [] as Array<LOD>
-      
+    
     meshes.forEach(mesh => {
-      const tags = Tags.GetTags(mesh).split(' ')
-      const tagDistance = tags.find(tag => tag.indexOf('distance') !== -1)
+      const rawTags = Tags.GetTags(mesh)
+      if (!rawTags || !rawTags.length) {
+        return
+      }
+      
+      const tags = rawTags.split(' ')
+      if (!tags.find((tag: string) => tag === 'lod')) {
+        return
+      }
+      
+      const tagDistance = tags.find((tag: string) => tag.indexOf('distance') !== -1)
       let distance = 0
       
       if (tagDistance) {
         distance = Number(tagDistance.split('_')[1])
       }
-  
+      
       LODs.push({
         mesh: mesh,
         distance: distance
       })
     })
     
-    const mainLOD = LODs.find(LOD => !LOD.distance)
-    
-    if (mainLOD) {
-      sortBy(LODs, 'distance').forEach(LOD => {
-        if (LOD.distance) {
-          console.log(mainLOD.mesh)
-          mainLOD.mesh.addLODLevel(LOD.distance, LOD.mesh)
-        }
-      })
+    if (LODs.length) {
+      const orderedLODs = sortBy(LODs, 'distance').reverse()
+      const mainLod = orderedLODs[0]
+      const mainLODMesh = mainLod.mesh as Mesh
+      
+      mainLODMesh.setEnabled(false)
+      mainLODMesh.useLODScreenCoverage = false
+      
+      for (let i = 1; i < orderedLODs.length; i++) {
+        const LOD = orderedLODs[i]
+        mainLODMesh.addLODLevel(LOD.distance, LOD.mesh)
+      }
+  
+      mainLod.mesh.addLODLevel(mainLod.mesh.distance, null)
     }
+    
+    console.log(LODs)
   }
+
 }

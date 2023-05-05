@@ -1,5 +1,6 @@
 import { AssetContainer, InstantiatedEntries, Mesh, SceneLoader, Tags } from '@babylonjs/core'
 import { Helpers } from '@/models/Helpers'
+import LODs from '@/models/mehanics/LODs'
 
 export interface Container {
   name: string;
@@ -27,7 +28,9 @@ export default class ContainerManager {
     const loadedContainer = await SceneLoader.LoadAssetContainerAsync(  path, name + '?timestamp=' + timestamp, globalThis.scene)
     
     if (loadedContainer) {
-      loadedContainer.removeAllFromScene()
+      // loadedContainer.removeAllFromScene()
+      
+      new LODs(loadedContainer.meshes)
       
       const newContainer = { name, data: loadedContainer }
       globalThis.assetContainers.push(newContainer)
