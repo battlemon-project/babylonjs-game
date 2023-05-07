@@ -20,7 +20,10 @@ export default class ContainerManager {
     const container = globalThis.assetContainers.find((container: Container) => container.name === name)
     
     if (container) {
-      return this.getInstance(container.data)
+      const instanceData = this.getInstance(container.data)
+      LODs.showOnlyMainLod(instanceData.rootNodes[0].getChildMeshes())
+      
+      return instanceData
     }
     
     const timestamp = await Helpers.getFileTimestamp(filePath)
@@ -28,14 +31,20 @@ export default class ContainerManager {
     const loadedContainer = await SceneLoader.LoadAssetContainerAsync(  path, name + '?timestamp=' + timestamp, globalThis.scene)
     
     if (loadedContainer) {
-      // loadedContainer.removeAllFromScene()
-      
-      new LODs(loadedContainer.meshes)
+      LODs.addLevels(loadedContainer.meshes)
+  
+      loadedContainer.removeAllFromScene()
       
       const newContainer = { name, data: loadedContainer }
       globalThis.assetContainers.push(newContainer)
       
-      return this.getInstance(newContainer.data)
+      const instancesData = this.getInstance(newContainer.data)
+      
+      
+      const meshes = instancesData.rootNodes[0].getChildMeshes()
+      LODs.showOnlyMainLod(meshes)
+      
+      return instancesData
     }
 
     return null
@@ -47,7 +56,9 @@ export default class ContainerManager {
       return name
     }, false, { doNotInstantiate: false })
     
-    result.rootNodes[0].getChildMeshes().forEach(mesh => {
+    const meshes = result.rootNodes[0].getChildMeshes()
+  
+    meshes.forEach(mesh => {
       const assetMesh = assetContainer.meshes.find(assetMesh => assetMesh.name === mesh.name) as Mesh
       
       if (assetMesh) {

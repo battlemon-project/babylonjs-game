@@ -6,7 +6,7 @@ import {
   Vector3,
   Matrix,
   AbstractMesh,
-  RollingAverage, MeshBuilder, StandardMaterial, Color3,
+  RollingAverage, MeshBuilder, StandardMaterial, Color3, Tags,
 } from '@babylonjs/core'
 import axios from 'axios'
 
@@ -125,5 +125,13 @@ export const Helpers = {
       console.error('Ошибка получения manifest.json:', error)
       return filePath
     }
+  },
+  getTagsFromMesh(mesh) {
+    const rawTags = Tags.GetTags(mesh)
+    if (!rawTags || !rawTags.length) {
+      return null
+    }
+  
+    return rawTags.split(' ')
   }
 }

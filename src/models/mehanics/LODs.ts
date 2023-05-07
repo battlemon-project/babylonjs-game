@@ -1,60 +1,67 @@
-import { Mesh, Tags } from '@babylonjs/core'
+import { AbstractMesh, Mesh } from '@babylonjs/core'
+import { Helpers } from '@/models/Helpers'
 import { sortBy } from 'lodash'
 
 interface LOD {
-  mesh: any;
-  distance: number;
+  mesh: any
+  distance: number
 }
 
 export default class LODs {
-  constructor (meshes: Array<any>) {
-    this.init(meshes)
-  }
-  
-  init(meshes: Array<any>) {
-    const LODs = [] as Array<LOD>
+  static getLODs(meshes: Array<AbstractMesh>)
+  {
+    const arrayLODs = [] as Array<LOD>
     
     meshes.forEach(mesh => {
-      const rawTags = Tags.GetTags(mesh)
-      if (!rawTags || !rawTags.length) {
+      const tags = Helpers.getTagsFromMesh(mesh)
+    
+      if (!tags || !tags.find((tag: string) => tag === 'lod')) {
         return
       }
-      
-      const tags = rawTags.split(' ')
-      if (!tags.find((tag: string) => tag === 'lod')) {
-        return
-      }
-      
+    
       const tagDistance = tags.find((tag: string) => tag.indexOf('distance') !== -1)
-      let distance = 0
-      
-      if (tagDistance) {
-        distance = Number(tagDistance.split('_')[1])
-      }
-      
-      LODs.push({
+      const distance = tagDistance ? Number(tagDistance.split('_')[1]) : 0
+    
+      mesh.isVisible = false
+  
+      arrayLODs.push({
         mesh: mesh,
         distance: distance
       })
     })
     
-    if (LODs.length) {
-      const orderedLODs = sortBy(LODs, 'distance').reverse()
-      const mainLod = orderedLODs[0]
+    return sortBy(arrayLODs, 'distance').reverse()
+  }
+  
+  static addLevels(meshes: Array<AbstractMesh>) {
+    const arrayLODs = LODs.getLODs(meshes) as Array<LOD>
+    
+    if (arrayLODs.length) {
+      const mainLod = arrayLODs[0]
       const mainLODMesh = mainLod.mesh as Mesh
+      mainLODMesh.isVisible = false
       
-      mainLODMesh.setEnabled(false)
       mainLODMesh.useLODScreenCoverage = false
       
-      for (let i = 1; i < orderedLODs.length; i++) {
-        const LOD = orderedLODs[i]
+      for (let i = 1; i < arrayLODs.length; i++) {
+        const LOD = arrayLODs[i]
         mainLODMesh.addLODLevel(LOD.distance, LOD.mesh)
+        LOD.mesh.isVisible = false
       }
   
       mainLod.mesh.addLODLevel(mainLod.mesh.distance, null)
     }
-    
-    console.log(LODs)
   }
-
+  
+  static showOnlyMainLod(meshes: Array<AbstractMesh>) {
+    const arrayLODs = LODs.getLODs(meshes)
+    
+    if (arrayLODs.length) {
+      arrayLODs.forEach((LOD) => {
+        LOD.mesh.isVisible = false
+      })
+  
+      arrayLODs[0].mesh.isVisible = true
+    }
+  }
 }
