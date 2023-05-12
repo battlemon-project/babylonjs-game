@@ -3,8 +3,7 @@ import { Helpers } from '@/models/Helpers'
 import LODs from '@/models/mehanics/LODs'
 
 export interface Container {
-  name: string;
-  // TODO: указать тип
+  name: string
   data: AssetContainer
 }
 
@@ -13,7 +12,7 @@ export default class ContainerManager {
     const filePath = path + name;
     
     if (!Helpers.isFile(filePath)) {
-      console.info('Not found file: ' + filePath)
+      console.error('Not found file container: ' + filePath)
       return null
     }
     
@@ -28,11 +27,11 @@ export default class ContainerManager {
     
     const timestamp = await Helpers.getFileTimestamp(filePath)
   
-    const loadedContainer = await SceneLoader.LoadAssetContainerAsync(  path, name + '?timestamp=' + timestamp, globalThis.scene)
+    const loadedContainer = await SceneLoader.LoadAssetContainerAsync(  path, name + '?timestamp=2' + timestamp, globalThis.scene)
     
     if (loadedContainer) {
       LODs.addLevels(loadedContainer.meshes)
-  
+      
       loadedContainer.removeAllFromScene()
       
       const newContainer = { name, data: loadedContainer }
@@ -40,8 +39,9 @@ export default class ContainerManager {
       
       const instancesData = this.getInstance(newContainer.data)
       
-      
       const meshes = instancesData.rootNodes[0].getChildMeshes()
+      globalThis.collisions.appendCollisionByMeshes(meshes)
+      
       LODs.showOnlyMainLod(meshes)
       
       return instancesData

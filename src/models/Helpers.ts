@@ -10,6 +10,8 @@ import {
 } from '@babylonjs/core'
 import axios from 'axios'
 
+// TODO: разбить хелперы по категориям
+
 export const Helpers = {
   getRandomInt (min: number, max: number) {
     min = Math.ceil(min)
@@ -126,12 +128,20 @@ export const Helpers = {
       return filePath
     }
   },
-  getTagsFromMesh(mesh) {
+  getTagsFromMesh(mesh: any) {
     const rawTags = Tags.GetTags(mesh)
     if (!rawTags || !rawTags.length) {
       return null
     }
   
     return rawTags.split(' ')
+  },
+  hasTag(mesh: any, tag: string) {
+    const tags = this.getTagsFromMesh(mesh)
+    if (tags) {
+      return tags.find((tagCheck: string) => tagCheck === tag) !== undefined
+    }
+    
+    return false
   }
 }

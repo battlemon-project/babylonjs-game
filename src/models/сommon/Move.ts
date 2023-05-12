@@ -43,7 +43,7 @@ export default class Move {
     this.store = store
     this.meshFoot = this.scene.getMeshById('playerFoot_' + playerId) as Mesh
     this.meshHead = this.scene.getMeshById('playerHead_' + playerId) as Mesh
-    this.modelCollisions = new Collisions()
+    this.modelCollisions = globalThis.collisions
     
     this.fly = true
     this.flyModeTimerId = 0

@@ -51,7 +51,7 @@ export default class Items {
         return null
       }
       
-      const rootId = '__root__item_' + item.flavour + '_' + this.playerId
+      // const rootId = '__root__item_' + item.flavour + '_' + this.playerId
       
      /* assetContainer.then((container) => {
         if (!container) {

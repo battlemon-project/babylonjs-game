@@ -1,4 +1,5 @@
 import { AbstractMesh, Scene, Tags } from '@babylonjs/core'
+import { Helpers } from '@/models/Helpers'
 
 export default class Collisions {
   listCollisions: AbstractMesh[]
@@ -15,7 +16,7 @@ export default class Collisions {
   
   private setCollisions()
   {
-    this.listCollisions = this.scene.meshes.filter(mesh => mesh.checkCollisions)
+    this.listCollisions = this.scene.meshes.filter(mesh => mesh.checkCollisions || Helpers.hasTag(mesh, 'collision'))
     this.listCollisionsFloor = this.scene.getMeshesByTags('ground')
     
     this.listCollisions.forEach((mesh) => {
@@ -43,5 +44,17 @@ export default class Collisions {
   
   checkCollisionFloor(mesh: AbstractMesh) {
     return Collisions.checkCollisionList(mesh, this.listCollisionsFloor)
+  }
+  
+  appendCollisionByMeshes(meshes: Array<AbstractMesh>) {
+    meshes.forEach(mesh => {
+      if (mesh.checkCollisions || Helpers.hasTag(mesh, 'collision')) {
+        mesh.checkCollisions = true
+        mesh.isVisible = Helpers.hasTag(mesh, 'visible_force')
+        mesh.isPickable = false
+        
+        this.listCollisions.push(mesh)
+      }
+    })
   }
 }
