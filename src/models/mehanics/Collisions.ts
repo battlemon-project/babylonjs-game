@@ -56,5 +56,7 @@ export default class Collisions {
         this.listCollisions.push(mesh)
       }
     })
+  
+    this.listCollisionsFloor = this.scene.getMeshesByTags('ground')
   }
 }

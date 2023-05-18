@@ -1,6 +1,6 @@
 import { AssetContainer, InstantiatedEntries, Mesh, SceneLoader, Tags } from '@babylonjs/core'
 import { Helpers } from '@/models/Helpers'
-import LODs from '@/models/mehanics/LODs'
+import LODs from '@/models/scene/LODs'
 
 export interface Container {
   name: string
@@ -20,7 +20,10 @@ export default class ContainerManager {
     
     if (container) {
       const instanceData = this.getInstance(container.data)
-      LODs.showOnlyMainLod(instanceData.rootNodes[0].getChildMeshes())
+      const meshes = instanceData.rootNodes[0].getChildMeshes()
+  
+      LODs.showOnlyMainLod(meshes)
+      globalThis.collisions.appendCollisionByMeshes(meshes)
       
       return instanceData
     }
