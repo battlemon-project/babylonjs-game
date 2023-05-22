@@ -8,7 +8,6 @@ import PlayerSelf from '@/models/playerSelf/Player'
 import Player from '@/models/player/Player'
 import { v4 as uuidv4 } from 'uuid'
 import Prefabs from '@/models/scene/Prefabs'
-import EventPoints from '@/models/mehanics/EventPoints'
 import RegisterTagsExtension from '@/models/scene/TagsExtansion'
 import Collisions from '@/models/mehanics/Collisions'
 
@@ -39,13 +38,15 @@ export default class Game {
           if (mutation.payload.id === playerId) {
             new PlayerSelf(playerId)
             
-            this.setClassesGame()
-            store.commit('LOADING_TOGGLE')
-            
-            console.info('Game loaded')
-            console.info('Self player ' + playerId + ' created')
+            this.setClassesGame(() => {
+              store.commit('LOADING_TOGGLE')
+  
+              console.info('Game loaded')
+              console.info('Self player ' + playerId + ' created')
+            })
   
             serverClient.syncPlayer()
+ 
           } else {
             this.players?.push(new Player(mutation.payload.id))
             console.info('Player ' + playerId + ' created')
@@ -66,7 +67,7 @@ export default class Game {
     })
   }
   
-  setClassesGame () {
+  setClassesGame (callback: any) {
    // new LightPoints()
     RegisterTagsExtension()
     
@@ -74,7 +75,8 @@ export default class Game {
     globalThis.collisions = new Collisions()
     
     new Prefabs(() => {
-      new EventPoints()
+     // new EventPoints()
+      callback()
     })
   }
   

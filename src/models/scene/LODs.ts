@@ -39,17 +39,15 @@ export default class LODs {
     if (arrayLODs.length) {
       const mainLod = arrayLODs[0]
       const mainLODMesh = mainLod.mesh as Mesh
-      mainLODMesh.isVisible = false
       
       mainLODMesh.useLODScreenCoverage = false
       
       for (let i = 1; i < arrayLODs.length; i++) {
         const LOD = arrayLODs[i]
         mainLODMesh.addLODLevel(LOD.distance, LOD.mesh)
-        LOD.mesh.isVisible = false
       }
   
-      mainLod.mesh.addLODLevel(mainLod.mesh.distance, null)
+      mainLod.mesh.addLODLevel(mainLod.distance, null)
     }
   }
   
