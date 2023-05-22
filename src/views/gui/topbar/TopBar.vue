@@ -4,16 +4,16 @@
             <div class="menu_button" @click="openMenu"></div>
         </div>
 
-        <div id="wallet_suiet"></div>
+      <meta-mask></meta-mask>
     </div>
 </template>
 
 <script>
-  import MountWallet from '../WalletSuiet'
+  import MetaMask from '@/views/gui/topbar/MetaMask'
 
   export default {
-    mounted () {
-      MountWallet()
+    components: {
+      MetaMask
     },
     methods: {
       openMenu() {
