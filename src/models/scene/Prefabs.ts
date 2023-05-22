@@ -41,9 +41,12 @@ export default class Prefabs {
         }
         
         const rootMesh = container.rootNodes[0]
+        rootMesh.parent = prefab
+  
+        const loopAnimation = container.animationGroups.find(group => group.name === 'start')
         
-        if (prefab) {
-          rootMesh.parent = prefab
+        if (loopAnimation) {
+          loopAnimation.play(true)
         }
         
       } catch (error) {
