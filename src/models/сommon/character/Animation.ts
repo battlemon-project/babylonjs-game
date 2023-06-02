@@ -8,6 +8,7 @@ import JumpFinish from './animation_groups/JumpFinish'
 import store from '@/store'
 import { Move } from '@/store/players/types'
 import Sprint from '@/models/сommon/character/animation_groups/Sprint'
+import Picking from '@/models/сommon/character/animation_groups/Picking'
 
 export default class Animation {
   playerId: string
@@ -39,6 +40,7 @@ export default class Animation {
     this.pushAnimation(new Sprint(this.playerId))
     this.pushAnimation(new JumpMiddle(this.playerId))
     this.pushAnimation(new JumpFinish(this.playerId))
+    this.pushAnimation(new Picking(this.playerId))
     
     if (idle.animation) {
       this.animationGroupCurrent = this.getAnimationByName('Idle_' + this.playerId)
@@ -106,6 +108,7 @@ export default class Animation {
     const animationIdle = this.getAnimationByName('Idle_' + this.playerId)
     const animationRun = this.getAnimationByName('Run_' + this.playerId)
     const animationSprint = this.getAnimationByName('Sprint_' + this.playerId)
+    const animationPicking = this.getAnimationByName('Picking_' + this.playerId)
     
     let animation = animationIdle
   
@@ -114,6 +117,10 @@ export default class Animation {
       if (move.forward.sprint) {
         animation = animationSprint
       }
+    }
+    
+    if (statePlayer.event.isFocused) {
+      animation = animationPicking
     }
     
     return animation

@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Prefabs from '@/models/scene/Prefabs'
 import RegisterTagsExtension from '@/models/scene/TagsExtansion'
 import Collisions from '@/models/mehanics/Collisions'
+import IceMeteor from '@/models/events/IceMeteor'
 
 export default class Game {
   players?: Array<Player>
@@ -75,8 +76,8 @@ export default class Game {
     globalThis.collisions = new Collisions()
     
     new Prefabs(() => {
-     // new EventPoints()
       callback()
+      new IceMeteor()
     })
   }
   

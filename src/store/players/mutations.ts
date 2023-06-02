@@ -27,6 +27,10 @@ const playerExample: Player = {
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0 }
     }
+  },
+  event: {
+    press: false,
+    isFocused: false
   }
 }
 
@@ -86,6 +90,14 @@ export const mutations: MutationTree<Players> = {
     if (statePlayer) {
       statePlayer.move = player.move
     }
+  },
+  SET_EVENT_PRESS (state, payload) {
+    const statePlayer = getPlayerById(state, payload.playerId)
+    statePlayer.event.press = payload.status
+  },
+  SET_EVENT_IS_FOCUSED (state, payload) {
+    const statePlayer = getPlayerById(state, payload.playerId)
+    statePlayer.event.isFocused = payload.status
   }
 }
 

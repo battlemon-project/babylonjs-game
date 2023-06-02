@@ -23,6 +23,7 @@ export default class ContainerManager {
       const meshes = instanceData.rootNodes[0].getChildMeshes()
   
       LODs.showOnlyMainLod(meshes)
+      
       globalThis.collisions.appendCollisionByMeshes(meshes)
       
       return instanceData

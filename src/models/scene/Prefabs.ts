@@ -1,5 +1,10 @@
-import { AbstractMesh, Scene } from '@babylonjs/core'
+import { AbstractMesh, InstantiatedEntries, Scene } from '@babylonjs/core'
 import ContainerManager from '@/models/scene/ContainerManager'
+
+export interface PrefabItem {
+  id: number;
+  container: InstantiatedEntries;
+}
 
 export default class Prefabs {
   prefabs: AbstractMesh[]
@@ -26,6 +31,9 @@ export default class Prefabs {
   }
   
   private async setItems() {
+    let id = 0
+    globalThis.prefabs = []
+    
     for (const prefab of this.prefabs) {
       const nameModel = `BTLMN_Prop_${prefab.id.replace('Prefab_', '')
         .replace(/\.[^/.]+$/, '')}.gltf`
@@ -42,12 +50,20 @@ export default class Prefabs {
         
         const rootMesh = container.rootNodes[0]
         rootMesh.parent = prefab
+        prefab.id = 'prefab_' + id
   
         const loopAnimation = container.animationGroups.find(group => group.name === 'start')
         
         if (loopAnimation) {
           loopAnimation.play(true)
         }
+        
+        globalThis.prefabs.push({
+          id: id,
+          container: container
+        })
+        
+        id++
         
       } catch (error) {
         console.error(`Error loading container ${nameModel}:`, error)

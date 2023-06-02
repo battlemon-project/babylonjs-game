@@ -21,7 +21,7 @@ export default class Collisions {
     
     this.listCollisions.forEach((mesh) => {
       mesh.isVisible = false
-      mesh.isPickable = false
+      mesh.isPickable = true
     })
   
     this.scene.getMeshesByTags('visible_force').forEach((mesh) => {
@@ -50,7 +50,7 @@ export default class Collisions {
     meshes.forEach(mesh => {
       if (mesh.checkCollisions || Helpers.hasTag(mesh, 'collision')) {
         mesh.checkCollisions = true
-        mesh.isVisible = Helpers.hasTag(mesh, 'visible_force')
+        mesh.isVisible = false
         mesh.isPickable = false
         
         this.listCollisions.push(mesh)

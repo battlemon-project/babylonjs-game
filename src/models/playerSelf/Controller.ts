@@ -57,6 +57,10 @@ export default class Controller {
       if (eventCode === 'ShiftLeft') {
         this.move.forward.sprint = true
       }
+  
+      if (eventCode === 'KeyE') {
+        this.store.commit('SET_EVENT_PRESS', { playerId: this.playerId, status: true })
+      }
     }
     
     if (KeyboardEventTypes.KEYUP === eventType) {
@@ -82,6 +86,10 @@ export default class Controller {
 
       if (eventCode === 'ShiftLeft') {
         this.move.forward.sprint = false
+      }
+  
+      if (eventCode === 'KeyE') {
+        this.store.commit('SET_EVENT_PRESS', { playerId: this.playerId, status: false })
       }
     }
     

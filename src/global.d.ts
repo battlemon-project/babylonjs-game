@@ -1,6 +1,7 @@
 import { Scene } from '@babylonjs/core'
 import { Container } from '@/models/scene/ContainerManager'
 import Collisions from '@/models/mehanics/Collisions'
+import { PrefabItem } from '@/models/scene/Prefabs'
 
 declare module '*.scss' {
   const content: { [className: string]: string }
@@ -13,6 +14,6 @@ declare module '*.glb'
 declare global {
   var scene: Scene;
   var assetContainers: Array<Container>;
-  var assetOriginContainers: Array<Container>;
+  var prefabs: Array<PrefabItem>;
   var collisions: Collisions;
 }

@@ -91,6 +91,30 @@ export default class SubscribeStore {
       unsubscribe
     })
   }
+  
+  pressEvent (callbackEvent: any) {
+    let oldStatePressEvent = false
+    
+    const unsubscribe = this.store.subscribe(() => {
+      const state = this.getPlayerById()
+      if (!state) {
+        return null
+      }
+      
+      const statePress = state.event.press
+      
+      if (oldStatePressEvent !== statePress) {
+        oldStatePressEvent = statePress
+        
+        callbackEvent(statePress)
+      }
+    })
+    
+    this.unsubscribes.push({
+      name: 'pressEvent',
+      unsubscribe
+    })
+  }
 
   fly (callbackEvent: any) {
     let oldState = true

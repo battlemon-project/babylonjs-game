@@ -29,12 +29,18 @@ export interface Property {
   flavour: string;
 }
 
+export interface Event {
+  press: boolean;
+  isFocused: boolean;
+}
+
 export interface Player {
   id: string;
   move: Move;
   character: string;
   items: Item[];
   properties: Property[];
+  event: Event
 }
 
 export interface Players {
