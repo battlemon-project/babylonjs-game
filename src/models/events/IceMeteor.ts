@@ -59,7 +59,7 @@ export default class IceMeteor {
         const meshEventId = mesh.id + '_event_mesh_' + index
         
         const boundingInfo = mesh.getBoundingInfo()
-        const size = boundingInfo.boundingBox.extendSize.scale(2) // extendSize - это половина размера ограничивающего объема, поэтому умножаем на 2
+        const size = boundingInfo.boundingBox.extendSize.scale(2)
         
         const invisibleMesh = MeshBuilder.CreateBox(meshEventId, {height: size.y, width: size.x, depth: size.z}, scene);
         invisibleMesh.parent = mesh
@@ -73,6 +73,7 @@ export default class IceMeteor {
           
           if (prefabItem) {
             prefabItem.container.animationGroups.forEach((animationGroup) => {
+              animationGroup.goToFrame(0)
               animationGroup.stop()
             })
   
@@ -93,37 +94,25 @@ export default class IceMeteor {
   }
   
   private buildRays () {
-    const cellSize = 0.25
-    const areaSize = 1
+    const rayCount = 3
     
-    const countCells = Math.round((areaSize * areaSize) / (cellSize * cellSize))
-    let cellStartX = 0 - (cellSize + (cellSize / 2))
-    const cellFinishX = cellStartX + areaSize
-    let cellY = cellSize + (cellSize / 2)
+    const length = 1
+    const separation = 1 / (rayCount - 1)
     
-    let i = 0
-    while (i < countCells) {
-      const rayX = cellStartX + (cellSize / 2)
-      const rayY = cellY - (areaSize / 2)
+    // Создаем каждый луч
+    for (let i = 0; i < rayCount; i++) {
+      const rayX = i * separation - 0.5
+      const rayY = 0
       
-      const length = 1
       const ray = new Ray(Vector3.Zero(), Vector3.Zero())
       const rayHelper = new RayHelper(ray)
-      rayHelper.attachToMesh(this.meshHead, new Vector3(rayX, rayY, length), new Vector3(0, 0.2, 0.2), length)
+      rayHelper.attachToMesh(this.meshHead, new Vector3(rayX, rayY, length), new Vector3(0, 0.5, 0.2), length)
       
       if (this.showRay) {
         rayHelper.show(this.scene)
       }
       
-      cellStartX += cellSize
-      if (cellFinishX < cellStartX + cellSize) {
-        cellStartX = 0 - (cellSize + (cellSize / 2))
-        cellY += cellSize
-      }
-      
       this.rays.push(ray)
-      
-      i++
     }
   }
   
@@ -161,6 +150,7 @@ export default class IceMeteor {
     
         if (item) {
           item.prefabItem.container.animationGroups.forEach((animationGroup) => {
+            animationGroup.goToFrame(0)
             animationGroup.stop()
           })
         }
@@ -182,7 +172,7 @@ export default class IceMeteor {
     
     setInterval(() => {
       this.castRays()
-    }, 100)
+    }, 500)
   }
   
   getPrefabIdByMesh(mesh: AbstractMesh)

@@ -69,7 +69,6 @@ export default class Game {
   }
   
   setClassesGame (callback: any) {
-   // new LightPoints()
     RegisterTagsExtension()
     
     new DevMode()
@@ -78,6 +77,7 @@ export default class Game {
     new Prefabs(() => {
       callback()
       new IceMeteor()
+      Scene.optimize()
     })
   }
   

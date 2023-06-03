@@ -96,6 +96,13 @@ export default class Animation {
   
       jumpFinishAnimation.addEvent(JumpFinishAnimationEvent)
     }
+  
+    this.subscribeStore.pressEvent(() => {
+        const animation = this.getAnimationByState()
+        if (animation) {
+          this.blending(animation)
+        }
+    })
   }
   
   private getAnimationByState() {
@@ -117,10 +124,10 @@ export default class Animation {
       if (move.forward.sprint) {
         animation = animationSprint
       }
-    }
-    
-    if (statePlayer.event.isFocused) {
-      animation = animationPicking
+    } else {
+      if (statePlayer.event.isFocused) {
+        animation = animationPicking
+      }
     }
     
     return animation

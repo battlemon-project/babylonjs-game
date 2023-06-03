@@ -45,8 +45,6 @@ export default class Scene {
           console.error(e)
         }
     
-        this.optimize(scene)
-    
         this.engine.runRenderLoop(() => {
           this.scene.render()
         })
@@ -56,15 +54,21 @@ export default class Scene {
       })
     }
 
-    private optimize (scene: BabylonScene) {
+    static optimize () {
+      const scene = globalThis.scene
       scene.autoClearDepthAndStencil = false
+      scene.disablePhysicsEngine()
 
-      const meshNotAnimate = scene.getMeshesByTags('notAnimate')
+      const meshNotAnimate = scene.getMeshesByTags('not_animate')
+  
+      scene.skipPointerMovePicking = true
 
       meshNotAnimate.forEach(mesh => {
         mesh.freezeWorldMatrix()
         mesh.doNotSyncBoundingInfo = true
         mesh.cullingStrategy = AbstractMesh.CULLINGSTRATEGY_BOUNDINGSPHERE_ONLY
+  
+        mesh.material?.freeze()
       })
 
       const options = new SceneOptimizerOptions(60, 1000)
